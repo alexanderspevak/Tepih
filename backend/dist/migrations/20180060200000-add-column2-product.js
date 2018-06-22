@@ -1,0 +1,1 @@
+//# sourceMappingURL=20180060200000-add-column2-product.js.map

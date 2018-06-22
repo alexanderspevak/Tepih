@@ -1,0 +1,1 @@
+{"version":3,"file":"manufacturer.entity.js","sourceRoot":"","sources":["../../models/manufacturer.entity.ts"],"names":[],"mappings":";AAmBA,iBAAS,CAAC,SAAoB,EAAE,SAAoB,EAAE,EAAE;IACpD,IAAI,YAAY,GAAG,SAAS,CAAC,MAAM,CAAC,cAAc,EAAE;QAChD,IAAI,EAAE,SAAS,CAAC,MAAM;KACzB,CAAC,CAAC;IAEH,YAAY,CAAC,SAAS,GAAG,UAAS,MAAM;IAExC,CAAC,CAAC;IAEF,OAAO,YAAY,CAAC;AACxB,CAAC,CAAC"}

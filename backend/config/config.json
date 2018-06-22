@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "alexandr",
+    "password": "foxmedia",
+    "database": "tepih",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "alexandr",
+    "password": "foxmedia",
+    "database": "tepih",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "alexandr",
+    "password": "foxmedia",
+    "database": "tepih",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

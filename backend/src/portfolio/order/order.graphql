@@ -1,0 +1,26 @@
+type Query {
+    orders: [Order!]
+    order (id: Int!):Order
+}
+
+type Mutation {
+    createOrder(input: updateCreateOrder) : Order
+    deleteOrder(id: Int!):Order
+    updateOrder(input:updateCreateOrder):Boolean
+}
+
+type Order {
+    id: Int!
+    customer_id: Int!
+    delivery_date: String
+    message:String
+    Customer: Customer
+    OrderItem:OrderItem
+}
+
+input updateCreateOrder {
+    id: Int
+    customer_id: Int
+    delivery_date: String
+    message:String
+}

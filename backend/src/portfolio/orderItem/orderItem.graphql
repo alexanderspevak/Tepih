@@ -1,0 +1,29 @@
+type Query {
+    orderItems: [OrderItem!]
+    orderItem (id: Int!):OrderItem
+}
+
+type Mutation {
+    createOrderItem(input: updateCreateOrderItem) : OrderItem
+    deleteOrderItem(id: Int!):OrderItem
+    updateOrderItem(input:updateCreateOrderItem):Boolean
+}
+
+type OrderItem {
+    id: Int!
+    product_id: Int!
+    quantity: Int!
+    size:String
+    order_Id:Int!
+    Order:Order
+    Product:Product
+}
+
+input updateCreateOrderItem {
+    id: Int
+    product_id: Int
+    quantity: Int
+    size:String
+    order_id:Int
+    status:String
+}

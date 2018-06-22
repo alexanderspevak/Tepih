@@ -1,0 +1,19 @@
+type Query {
+    manufacturers: [Manufacturer!]
+    manufacturer (id: Int!): Manufacturer!
+    
+}
+
+type Manufacturer {
+    id: Int
+    name: String
+    Product: [Product]
+    
+}
+
+type Mutation {
+    deleteManufacturer(id: Int!): Int
+    createManufacturer(name:String!):Manufacturer
+    updateManufacturer(id:Int,name:String):Boolean
+}
+
