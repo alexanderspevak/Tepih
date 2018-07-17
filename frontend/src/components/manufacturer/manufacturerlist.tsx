@@ -1,12 +1,14 @@
 import { Select } from 'antd';
 import * as React from 'react';
 //import WrappedUser from './user';
-import { Query } from 'react-apollo';
+import { Query} from 'react-apollo';
 import {GET_MANUFACTURERS} from '../../queries/queries';
 
 interface IProps{
-    defaultValue:string
+    defaultValue:any,
+
     onChange(key:string, e:any):void
+
 }
 
 interface IState{
@@ -27,8 +29,6 @@ class ManufacturerList extends React.Component<IProps, IState> {
 
         onChange(e:any){
             const item=JSON.parse(e);
-            console.log(item.id)
-
             this.props.onChange('manufacturer_id',item.id);
         }
     
@@ -45,7 +45,7 @@ class ManufacturerList extends React.Component<IProps, IState> {
                                         <Select.Option value={JSON.stringify(item)} key={item.id}>
                                                 {item.name}
                                         </Select.Option>
-                                    )
+                                        )
                                 })
                                 return (
                                 <Select defaultValue={this.props.defaultValue} onChange={this.onChange}>
@@ -63,4 +63,4 @@ class ManufacturerList extends React.Component<IProps, IState> {
     
     }
     
-    export default ManufacturerList;
+    export default ManufacturerList

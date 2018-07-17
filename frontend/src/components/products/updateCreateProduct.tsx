@@ -3,15 +3,17 @@ import * as React from 'react';
 import {Mutation} from 'react-apollo';
 import ManufacturerList from '../manufacturer/manufacturerlist';
 import WrappedProductSize from './productsize'
-import {UPDATE_PRODUCT,GET_PRODUCTS} from '../../queries/queries'
+import {UPDATE_PRODUCT,CREATE_PRODUCT,GET_PRODUCTS} from '../../queries/queries'
+import {IRow} from '../../interface';
 
 
 
 interface IProps {
   countBy?: number;
   form?:any;
-  values:any
-  onCancel(key:string,value:boolean):void;
+  values: IRow,
+  mode:string,
+  onCancel(key:string,value:boolean,fn?:Function):void;
   handleSubmit(query:string,params:Object):void
 }
 
@@ -46,14 +48,14 @@ class Product extends React.Component<IProps, IState> {
             description:'',
             pic:'',
             manufacturer_id:'',
-  
         }
         
     }
 
-    public componentDidMount(){
+    public componentWillMount(){
         const values=this.props.values
-        const pic=values.pic.props.src.slice(1)
+        const pic= values && values.pic && values.pic.props && values.pic.props.src.slice(1)
+        
         this.setState({
             name:values.name,
             type:values.type,
@@ -63,7 +65,7 @@ class Product extends React.Component<IProps, IState> {
             color:values.color,    
             description:values.description,
             pic,
-            manufacturer_id:values.ManufacturerId,
+            manufacturer_id:values.manufacturer_id,
             id:values.id,
         })
     }
@@ -77,14 +79,14 @@ class Product extends React.Component<IProps, IState> {
         this.setState({ [key]:e})
     }
 
-    public handleSubmit(updateProduct:Function,e:React.FormEvent<HTMLInputElement>){
+    public handleSubmit(updateCreateProduct:Function,e:React.FormEvent<HTMLInputElement>){
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err:Error, values :any) => {
           if (!err) {
-            console.log('what is state',this.state)
-            updateProduct({variables:{input:this.state}})
-
-          }else{
+                updateCreateProduct({variables:{input:this.state}})
+                console.log('itprops onCancel')
+            this.props.onCancel('showProduct',false)
+          } else{
             console.log('err')
      
           }
@@ -92,25 +94,31 @@ class Product extends React.Component<IProps, IState> {
       }
 
   public render() {
-      
+    if(this.props.mode==='update'){
+        var mutationQuery=UPDATE_PRODUCT
+    }else{
+        mutationQuery=CREATE_PRODUCT
+    }
     const { getFieldDecorator } = this.props.form;
     return (
         <Mutation 
-            mutation={UPDATE_PRODUCT}
-            update={(cache,{data:{updateProduct}})=>{
-                console.log('cachereadQuery',cache.readQuery({query:GET_PRODUCTS}))
-                const {products}:any=cache.readQuery({query:GET_PRODUCTS});
-                console.log('what are products',products[0]);
-                console.log('update products',products.concat([updateProduct]))
-                cache.writeQuery({
-                    query:GET_PRODUCTS,
-                    data:{products:products.concat([updateProduct])}
-                })
-            }}
-        
+            mutation={mutationQuery}
+            /* update={(cache,{data}) => {
+                    const products:{products:object[]}|null=cache.readQuery({query:GET_PRODUCTS});
+                    console.log('what is data here????',data)
+                    if(products){
+                        products.products.push(data.createProduct)
+                        cache.writeQuery({query:GET_PRODUCTS,data:products})
+                    }
+                if(this.props.mode=='create'){
+                    console.log('hello create')
+                }
+    
+            }} */
+            refetchQueries={[{query:GET_PRODUCTS}]}
         >
             {
-            (updateProduct,{data})=>(
+            (updateCreateProduct,{data})=>(
                 <Modal
                     maskClosable={false}
                     style={{ top: '5vh' }}
@@ -120,7 +128,7 @@ class Product extends React.Component<IProps, IState> {
                     visible={true}
                     cancelText={'Close'}
                     okText={'Save changes'}
-                    onOk={this.handleSubmit.bind(this,updateProduct)}
+                    onOk={this.handleSubmit.bind(this,updateCreateProduct)}
                     onCancel={()=>this.props.onCancel('showProduct',false)}
                 >
 
@@ -135,7 +143,6 @@ class Product extends React.Component<IProps, IState> {
                                             message: 'Name can not be empty',
                                             }, {
                                             required: true, message: 'Please write name',
-                                            
                                         }],
                                     })(
                                     <Input
@@ -163,7 +170,7 @@ class Product extends React.Component<IProps, IState> {
                                     )}
                                 </Form.Item>
                                 <Form.Item label={'Manufacturer'}>
-                                    <ManufacturerList defaultValue={this.props.values.Manufacturer} onChange={this.onChange}/>
+                                    <ManufacturerList defaultValue={this.props.values.manufacturerName} onChange={this.onChange}/>
                                 </Form.Item>
 
                                 <Form.Item label={'Picture'}>
@@ -206,7 +213,7 @@ class Product extends React.Component<IProps, IState> {
                                             required: true, message: 'Please write size',
                                         }],
                                     })(
-                                        <WrappedProductSize onChPictureange={this.onChange}/>   
+                                        <WrappedProductSize onChange={this.onChange} size={this.state.size}/>   
                                     )}
                                 </Form.Item>
                                 <Form.Item label={'Colors'}>

@@ -3,141 +3,151 @@ import * as React from 'react';
 //import WrappedUser from './user';
 import * as queries from '../../queries/queries';
 import WrappedProduct from './updateCreateProduct';
+import WrappedBuy from './Buy';
 import { Query } from 'react-apollo';
 import {Table} from 'antd';
 import {graphql,compose, Mutation} from 'react-apollo';
-import {GET_STATE,UPDATE_STATE, DELETE_PRODUCT} from '../../queries/queries';
+import {DELETE_PRODUCT,UPDATE_PRODUCTTABLE,GET_PRODUCTTABLE,GET_LOCAL_MANUFACTURERS,UPDATE_LOCAL_MANUFACTURERS, GET_PRODUCTS} from '../../queries/queries';
 import Picmodal from './picmodal';
+import {IRow} from '../../interface';
 
 
 interface IProps {
   countBy?: number;
   form?:any;
   currentItem:any
+  productTable:[string]
+  manufacturers:[any]
   admin:boolean
   UPDATE_STATE({
       variables:{
           
       }
   }):void
-}
+  UPDATE_PRODUCTTABLE({
+    variables:{
 
+    }
+  }):void
+  UPDATE_LOCAL_MANUFACTURERS({
+    variables:{
+
+    }
+  }):void
+}
 interface IState {
-    show:any
+    show:{
+        showUser:boolean,
+        showPic:boolean,
+        showProduct:boolean|IRow,
+        createProduct:boolean,
+        buyProduct:boolean|IRow
+    }
     dataColumns:any
     products?:any
 }
+
 let items:any=null
-
-
 class Products extends React.Component<IProps, IState> {
-
     products:any=null;
     constructor(props: any){
         super(props);
         this.state={
             show:{
                 showUser:false,
-                showPic:null,
-                showProduct:false
+                showPic:false,
+                showProduct:false,
+                createProduct:false,
+                buyProduct:false
             },
             dataColumns:[]
-            
         }
         this.onChange=this.onChange.bind(this);
     }
-    
-
    async componentDidMount() {
-
     const editColumn = {
         title:'Edit',
         dataIndex:'edit',
         key:'edit', 
         render: (text:any,row:any,index:any) => {
- 
+       
             return(
-                <div onClick={()=>this.onChange('showProduct',row)}>
+                <Button onClick={()=>{
+                    this.onChange('showProduct',row)}}>
                     edit
-                </div>
+                </Button>
             )
         }
     } as ColumnType;
-
+    const BuyColumn = {
+        title:'',
+        dataIndex:'kupi',
+        key:'kupi', 
+        render: (text:any,row:any,index:any) => {
+       
+            return(
+                <Button onClick={()=>{
+                    this.onChange('buyProduct',row)}}>
+                    Naruči
+                </Button>
+            )
+        }
+    } as ColumnType;
         this.setState({products:await queries.products()})
         if(this.props.admin){
-           columns.push(editColumn);
-
-        columns.push({
+            columns.push(editColumn);
+            columns.push({
             title:'Delete',
             dataIndex:'delete',
             key:'delete',
             render:(text:any,row:any,index:any)=>{
-                console.log('show row data',row)
                 return (
-                    <Mutation mutation={DELETE_PRODUCT}>
+                    <Mutation 
+                        mutation={DELETE_PRODUCT}
+                        update={(cache,{data}) => {
+           
+                             const productData=cache.readQuery({query:GET_PRODUCTS})as ProductData
+                            if(productData){
+                                const resultData=productData.products.filter((item)=>item.id!=data.deleteProduct.id)
+                                productData.products=resultData
+                                cache.writeQuery({query:GET_PRODUCTS,data:productData})
+                            }
+                        }}
+                    >
                         {
                             (deleteProduct,{data})=>(
-                                <button onClick={()=>{deleteProduct({variables:{value:row.id}})}}>
+                                <Button onClick={()=>{deleteProduct({variables:{value:row.id}})}}>
                                      delete
-                                </button>
+                                </Button>
 
                             )
-
-
                         }
                     </Mutation>
                 )
             }
         })
+        }else{
+            columns.push(BuyColumn)
         }
         this.setState({dataColumns:columns})
     }
-
-    
-
- 
     public onChange(key:string,value:string|boolean,fn?:Function):void{
         this.setState({show:{...this.state.show,[key]:value}})
         if(fn){fn()};
     }
-
-
-
-    // public handleSubmit(query:string,params:Object):void{
-    //         this.setState({showUser:false});
-    // }
-
-    // public onClick(){
-    //     this.setState({showUser:!this.state.showUser})
-
-    //     this.props.UPDATE_STATE({
-    //         variables:{
-    //             value:'hello munchmalow'
-    //         }
-    //     }
-    //     )
-    // }
-    
     public render() { 
-        return (
-           
+        return ( 
             <div>
                 <Query query={queries.GET_PRODUCTS}>
                     {({loading,error,data})=>{
                         if(loading) return null;
                         if(error) return `Error: ${error}`;
-                            console.log('what is data',data)
                             {items=data.products.map((item:any,index:number)=>{
+                                
                                 const newItem:any={}
                                 newItem.key=item.id;
                                 Object.keys(item).forEach((key)=>{
-                                    if(key==='Manufacturer') 
-                                    {
-                                        newItem.Manufacturer=item.Manufacturer.name
-                                        newItem.ManufacturerId=item.Manufacturer.id
-                                    }
-                                    else if(key==='pic'){
+                                    if(key==='pic'){
                                         newItem[key]=<img 
                                             src={`/${item[key]}`} 
                                             alt={item[key]} 
@@ -150,54 +160,44 @@ class Products extends React.Component<IProps, IState> {
                                     {
                                         newItem[key]=item[key]
                                     }
-                                    
                                 })
-                                newItem.edit='edit';
-                                newItem.delete='delete';
                                 return newItem;
                             })}
-
+                            ;
                             return <Table dataSource={items} columns={this.state.dataColumns}/>;
                     }}
-                </Query>,
-
+                </Query>
+                
                  {this.state.show.showProduct&&
-                    <WrappedProduct onCancel={this.onChange} values={this.state.show.showProduct}/>
-                 /* <WrappedUser
-                     onCancel={this.onChange}   
-                     //handleSubmit={this.handleSubmit}
-                 /> */
-
-
+                    <WrappedProduct onCancel={this.onChange} values={this.state.show.showProduct} mode={"update"}/>
                  }
-                {/* <Button onClick={()=>{this.onChange('showUser',true)}}>
-                    Show User Modal
-                </Button> */}
-                <Button onClick={()=>{this.onChange('showProduct',true)}}>
-                    Show products
-                </Button>
+                 {this.state.show.createProduct&&
+                    <WrappedProduct onCancel={this.onChange} values={this.state.show.showProduct} mode={"create"}/>
+                 }
+                 {this.state.show.buyProduct&&
+                    <WrappedBuy onCancel={this.onChange} values={this.state.show.buyProduct} mode={"buy"}/>
+                 }
+                {this.props.admin&&<Button onClick={()=>{this.onChange('createProduct',true)}}>
+                    Create Product
+                </Button>}
                 {this.state.show.showPic&&<Picmodal link={`/${this.state.show.showPic}`} onCancel={this.onChange}/>}
-                {this.props.currentItem.orderItems}
-                <input onChange={(e)=>{this.props.UPDATE_STATE({
-                     variables:{
-                         value:e.target.value
-                    },
-                    })}
-                    }
-                >
-                </input>
             </div>
             )
     }
-
 }
-
-
 export default compose(
-    graphql(UPDATE_STATE,{name:'UPDATE_STATE'}),
-    graphql(GET_STATE,{
-        props:({data:currentItem})=>{
-            return currentItem;
+    graphql(UPDATE_PRODUCTTABLE,{name:'UPDATE_PRODUCTTABLE'}),
+    graphql(UPDATE_LOCAL_MANUFACTURERS,{name:'UPDATE_LOCAL_MANUFACTURERS'}),
+    graphql(GET_LOCAL_MANUFACTURERS,{
+        props:({data:manufacturers}:any)=>{
+            return manufacturers.manufacturers;
+        }
+    }),
+
+    graphql(GET_PRODUCTTABLE,{
+        props:({data:productTable} :any )=>{
+      
+            return productTable.productTable;
         }
     })
 )(Products);
@@ -208,6 +208,11 @@ type ColumnType = {
     dataIndex: string,
     render?: (text: any, row: any, index: any) => React.ReactElement<any>;
 }
+type ProductData = {
+    products:Array<{id:number}>
+    }|null
+
+    
 
 const columns =[{
     title:'Name',
@@ -251,7 +256,7 @@ const columns =[{
 } as ColumnType,
 {
     title:'Manufacturer',
-    dataIndex:'Manufacturer',
-    key:'Manufacturer'  
+    dataIndex:'manufacturerName',
+    key:'Manufacturer'
 } as ColumnType
 ]

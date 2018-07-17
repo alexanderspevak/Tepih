@@ -1,17 +1,23 @@
 import {ApolloClient, HttpLink , InMemoryCache, ApolloLink} from 'apollo-boost';
 import {withClientState} from 'apollo-link-state';
 import gql from 'graphql-tag';
+
 //import {UPDATE_STATE} from './components/products/queries'
 
 const endpointURL = 'http://localhost:9000/graphql';
 
-const cache=new InMemoryCache();
+const cache=new InMemoryCache({
+  dataIdFromObject:(o:any)=>o.id
+});
 
 const defaultState={
-  currentItem: {
-    __typename:'currenProduct',
-    orderItems:'hello',
-  }
+
+    productTable:{
+      __typename:'productTable',
+      productTable:['hello how are you']
+    },
+
+  
 }
 
 const stateLink=withClientState({
@@ -19,31 +25,33 @@ const stateLink=withClientState({
   defaults:defaultState,
   resolvers:{
     Mutation:{
-      updateOrderItem:(_:any,{value}:any,{cache}:any)=>{
+      
+      updateProductTable:(_:any,variables:any,{cache}:any)=>{
         const query=gql`
-          query GetCurrentItem{
-            currentItem @client{
-              orderItems
+          query GetProductsTable{
+            productTable @client{
+              __typename
+              productTable
             }
+         
           }
-        `
-        const previousState=cache.readQuery({query:query})
-        console.log('what is previous state', previousState)
-        console.log('what is value', value)
+        `;
+      
+        const previousState=cache.readQuery({query})
         const data={
-            currentItem:{
-              ...previousState.currentItem,
-              orderItems:value
-            }
+         ...previousState,
+         productTable:{
+           ...previousState.productTable,productTable:variables.value
+         }
         }
-        cache.writeData({query,data})
-
-        console.log('last console',cache.readQuery({query:query}))
-        //return data;
+        cache.writeQuery({query,data})
       }
     }
-  }
+  },
+
 })
+
+
 
 export const client = new ApolloClient({
     link: ApolloLink.from([
@@ -51,5 +59,6 @@ export const client = new ApolloClient({
       new HttpLink({uri: endpointURL})
     ]),
     cache
+
   });
   

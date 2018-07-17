@@ -7,13 +7,14 @@ import * as React from 'react';
 interface IProps{
     onChange(key:string,value:string|undefined):void
     form?:any
+    size?:string
 }
 
 interface IState{
     unit?:string
-    height?:string
-    length?:string
-    width?:string
+    height?:number
+    length?:number
+    width?:number
     size?:string
 }
 
@@ -24,69 +25,179 @@ class ProductSize extends React.Component<IProps, IState> {
         constructor(props: any){
             super(props);
             this.state={
-                unit:'PC',
-                length:'0',
-                height:'0',
-                width:'0',
+                unit:'mera',
+                length:0,
+                height:0,
+                width:0,
                 size:''
             }
             this.onSelectUnit=this.onSelectUnit.bind(this);
             this.onChangeSize=this.onChangeSize.bind(this);
         }
-        onSelectUnit(e:string){
-            this.setState({unit:e})
-            this.props.onChange('unit',e)
-            console.log('what is e',e)
-            switch (e){
-                case 'PC':
-                console.log('case pc')
-                this.setState({size:''}, ()=>{
-                    console.log('what is size in state',this.state.size)
-                    this.props.onChange('size',this.state.size)})
-                break;
-                case 'M':
-                this.setState({size:this.state.height},()=>{
-                    console.log('what is size in state',this.state.size)
-                    this.props.onChange('size',this.state.size)})
-                break;
-                case 'M2':
-                console.log('case m2')
-                this.setState({size:this.state.height+'x'+this.state.width},()=>this.props.onChange('size',this.state.size))
-                break;
-                case 'M3':
-                this.setState({size:this.state.height+'x'+this.state.width+'x'+this.state.length},()=>this.props.onChange('size',this.state.size))
-                break;
-                default:
-                console.log('non existent')
+
+        componentWillMount(){
+            console.log('this.propssize',this.props.size)
+            if(this.props.size&&this.props.size!=''){
+                const arr:string[]=this.props.size.split('x')
+                console.log('what is arr')
+                switch (arr.length){
+                    case 3:
+                        this.setState({length:parseInt(arr[2])})
+                    case 2:
+                        this.setState({width:parseInt(arr[1])});
+                    case 1:
+                        this.setState({height:parseInt(arr[0])})
+                }
             }
+
+        }
+
+        onSelectUnit(e:string){
+         
+            this.setState({unit:e},() =>{
+
+                switch (e){
+                    case 'mera':
+                    let {width,length,height}=this.state;
+                    
+                    if(height&&height>0&&width&&width>0){
+                        var heightWidth='x'
+                    }else{
+                        heightWidth=''
+                    }
+                    if(height&&height>0&&width&&width>0){
+                        var heightWidth='x'
+                    }else{
+                        heightWidth=''
+                    }
+                    if(height&&height>0&&length&&length>0&&width==0){
+                        var heightLength='x'
+                    }else{
+                        heightLength=''
+                    }
+                    if(width&&width>0&&length&&length>0){
+                        var widthLength='x'
+                    }else{
+                        widthLength=''
+                    }
+                    if(height&&height>0){
+                        var heightParse=height+''
+                        console.log('hwat is heighParse',heightParse)
+                    }else{
+                        heightParse=''
+                    }
+                    if(width&&width>0){
+                        var widthParse=width+''
+                    }else{
+                        widthParse=''
+                    }
+                    if(length&&length>0){
+                        var lengthParse=length+''
+                    }else{
+                        lengthParse=''
+                    }
+                      
+                    const sizeState=heightParse+heightWidth+widthParse+widthLength+heightLength+lengthParse;
+                    this.setState({size:sizeState}, 
+                        ()=>{
+                            this.props.onChange('size',this.state.size)})
+                
+                    break;
+                    case 'm':
+                    this.setState({size:''},()=>{
+                        console.log('what is size in state',this.state.size)
+                        this.props.onChange('size',this.state.size)})
+                    break;
+                    case 'm2':
+                    this.setState({size:''},()=>this.props.onChange('size',this.state.size))
+                    break;
+                    case 'm3':
+                    this.setState({size:''},()=>this.props.onChange('size',this.state.size))
+                    break;
+                    default:
+                    console.log('non existent')
+                }
+            }
+        
+        )
+            this.props.onChange('unit',e)
         }
         onChangeSize(key:string,e:string){
-            console.log('what is e',e)
+            console.log('what is e type', typeof e)
             this.setState({[key]:e},()=>{
+                console.log('what is unit',this.state.unit)
                 switch (this.state.unit){
-                    case 'PC':
-                    this.setState({size:''}, ()=>this.props.onChange('size',this.state.size))
-                    case 'M':
-                    this.setState({size:this.state.height},()=>this.props.onChange('size',this.state.size))
-                    case 'M2':
-                    this.setState({size:this.state.height+'x'+this.state.width},()=>this.props.onChange('size',this.state.size))
-                    case 'M3':
-                    this.setState({size:this.state.height+'x'+this.state.width+'x'+this.state.length},()=>this.props.onChange('size',this.state.size))
+                    case 'mera':
+                    
+                    let {width,length,height}=this.state;
+                    
+                    if(height&&height>0&&width&&width>0){
+                        var heightWidth='x'
+                    }else{
+                        heightWidth=''
+                    }
+                    if(height&&height>0&&width&&width>0){
+                        var heightWidth='x'
+                    }else{
+                        heightWidth=''
+                    }
+                    if(height&&height>0&&length&&length>0&&width==0){
+                        var heightLength='x'
+                    }else{
+                        heightLength=''
+                    }
+                    if(width&&width>0&&length&&length>0){
+                        var widthLength='x'
+                    }else{
+                        widthLength=''
+                    }
+                    if(height&&height>0){
+                        var heightParse=height+''
+                        console.log('hwat is heighParse',heightParse)
+                    }else{
+                        heightParse=''
+                    }
+                    if(width&&width>0){
+                        var widthParse=width+''
+                    }else{
+                        widthParse=''
+                    }
+                    if(length&&length>0){
+                        var lengthParse=length+''
+                    }else{
+                        lengthParse=''
+                    }
+                      
+                    const sizeState=heightParse+heightWidth+widthParse+widthLength+heightLength+lengthParse;
+                    this.setState({size:sizeState}, 
+                        ()=>{
+                            this.props.onChange('size',this.state.size)})
+                    break; 
+                    case 'm':
+                    this.setState({size:''},()=>this.props.onChange('size',this.state.size))
+                    break;
+                    case 'm2':
+              
+                    this.setState({size:''},()=>{
+        
+                        this.props.onChange('size',this.state.size)})
+                    break;
+                    case 'm3':
+                    this.setState({size:''},()=>this.props.onChange('size',this.state.size))
                 }
+                this.props.onChange('size',this.state.size)
             }
             )
         }
-        onChangeWidth(e:string){
-            this.setState({width:e})
-        }
-        onChangeLength(e:string){
-            this.setState({length:e})
-        }
+
+
+
         public render() { 
+           
             const {getFieldDecorator}=this.props.form;
 
             const S1=Array.apply(null, {length: 301}).map(((Function.call)), Number).map((item:number)=>{
-                if(item===0) return;
+                //if(item===0) return;
                 return (
                     <Select.Option key={item} value={item}>
                         {item} cm
@@ -96,21 +207,21 @@ class ProductSize extends React.Component<IProps, IState> {
             return (
                 <div>
                         <Select onChange={this.onSelectUnit} defaultValue={this.state.unit}>
-                            <Select.Option key={"PC"} value={"PC"}>
-                                PC
+                            <Select.Option key={'mera'} value={'mera'}>
+                                merna jedinica
                             </Select.Option>
-                            <Select.Option key={"PC"} value={"M"}>
-                                M
+                            <Select.Option key={"m"} value={"m"}>
+                                m
                             </Select.Option>
-                            <Select.Option key={"PC"} value={"M2"}>
-                                M2
+                            <Select.Option key={"m2"} value={"m2"}>
+                                m2
                             </Select.Option>
-                            <Select.Option key={"PC"} value={"M3"}>
-                                M3
+                            <Select.Option key={"m3"} value={"m3"}>
+                                m3
                             </Select.Option>
                         </Select>
                        {
-                            (this.state.unit==='M'||this.state.unit==='M2'||this.state.unit==='M3')&&( 
+                            (this.state.unit==='mera')&&( 
                                 <div>
                                     <Form.Item label="Height">
                                         {getFieldDecorator('height', {
@@ -128,7 +239,7 @@ class ProductSize extends React.Component<IProps, IState> {
                             )
                         }
                         {   
-                           ( (this.state.unit==='M2'||this.state.unit==='M3'))&&( 
+                           ( (this.state.unit==='mera'))&&( 
                                
                         <div>
                                     <Form.Item label="Width">
@@ -147,7 +258,7 @@ class ProductSize extends React.Component<IProps, IState> {
                             ) 
                         }
                         {   
-                            (this.state.unit==='M3')&&( 
+                            (this.state.unit==='mera')&&( 
                                 <div>
                                 <Form.Item label="Length">
                                     {getFieldDecorator('length', {

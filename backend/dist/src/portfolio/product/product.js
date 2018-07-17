@@ -30,12 +30,18 @@ let ProductResolver = class ProductResolver {
     }
     getProducts(obj, args, context, info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.product.findAll({
+            const product = yield this.product.findAll({
                 include: [
                     { model: this.manufacturer, as: 'Manufacturer' },
                     { model: this.orderItem, as: 'OrderItem' },
                 ],
             });
+            const products = product.map((item) => {
+                item.manufacturerName = item.get('Manufacturer').get('name');
+                item.ManufacturerId = item.Manufacturer.Id;
+                return item;
+            });
+            return products;
         });
     }
     getProduct(obj, args, context, info) {
@@ -50,9 +56,12 @@ let ProductResolver = class ProductResolver {
     }
     deleteProduct(obj, args) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.product.destroy({
+            const product = this.product.findById(args.id);
+            yield this.product.destroy({
                 where: { id: args.id },
             });
+            console.log('what is product', product);
+            return product;
         });
     }
     createProduct(obj, { input }) {
@@ -64,7 +73,9 @@ let ProductResolver = class ProductResolver {
     }
     updateProduct(obj, { input }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.product.upsert(input).catch((err) => err);
+            const p = yield this.product.upsert(input, { returning: true });
+            console.log('what is p', p[0]);
+            return p[0];
         });
     }
 };

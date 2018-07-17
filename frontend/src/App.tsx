@@ -21,7 +21,7 @@ class App extends React.Component {
             To get started, edit <code>src/App.tsx</code> and save to reload.
             </p>
             <Switch>
-              <Route exact={true} path="/products" render={(props:any)=><Products {...props} admin="false"/>} />
+              <Route exact={true} path="/products" render={(props:any)=><Products {...props} admin={false}/>} />
               <Route exact={true} path="/context" component={Wrap} />
             </Switch>
         </div>

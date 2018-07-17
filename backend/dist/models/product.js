@@ -82,7 +82,7 @@ __decorate([
         validate: {
             fn: function (val) {
                 console.log('what is val', val);
-                if (val == 'pc' || val == 'm2' || val == 'm3') {
+                if (val == 'pc' || val == 'm2' || val == 'm3' || val == 'm') {
                     console.log('logis is problem');
                     return this;
                 }

@@ -4,9 +4,9 @@ type Query {
 }
 
 type Mutation {
-    createProduct(input: UpdateCreateProduct!) : Product
-    deleteProduct(id: Int!):Product
-    updateProduct(input:UpdateCreateProduct):Boolean
+    createProduct(input: UpdateCreateProduct!): Product
+    deleteProduct(id: Int!): Product
+    updateProduct(input:UpdateCreateProduct): Product
 }
 
 type Product {
@@ -21,6 +21,7 @@ type Product {
     price: String
     unit:String
     Manufacturer:Manufacturer
+    manufacturerName:String
     OrderItem:[OrderItem]
 }
 

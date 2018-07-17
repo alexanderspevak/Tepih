@@ -15,12 +15,21 @@ export class ProductResolver {
 
   @Query('products')
   async getProducts(obj, args, context, info) {
-    return await this.product.findAll({
+     const product:any=await this.product.findAll({
       include: [
         {model: this.manufacturer, as: 'Manufacturer'},
         {model: this.orderItem, as: 'OrderItem'},
       ],
     });
+    
+    const products=product.map((item)=>{
+      item.manufacturerName=item.get('Manufacturer').get('name');
+      item.ManufacturerId=item.Manufacturer.Id;
+      // console.log('what is producData',item.dataValues)
+      // console.log('what is Manufacturer',item.dataValues.Manufacturer.dataValues.id,item.dataValues.Manufacturer.dataValues.name)
+      return item;
+    })
+    return products;
   }
 
   @Query('product')
@@ -35,9 +44,12 @@ export class ProductResolver {
 
   @Mutation()
    async deleteProduct(obj, args){
-    return await this.product.destroy({
+     const product=this.product.findById(args.id)
+     await this.product.destroy({
       where: {id: args.id},
     });
+    console.log('what is product',product)
+    return product
   }
 
   @Mutation()
@@ -49,6 +61,8 @@ export class ProductResolver {
 
  @Mutation()
  async updateProduct(obj, {input}){
-   return  await this.product.upsert(input).catch((err)=>err);
+  const p =  await this.product.upsert(input, {returning:true});
+  console.log('what is p',p[0])
+  return p[0];
 }
 }
