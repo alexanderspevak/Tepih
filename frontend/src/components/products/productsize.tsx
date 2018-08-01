@@ -25,7 +25,7 @@ class ProductSize extends React.Component<IProps, IState> {
         constructor(props: any){
             super(props);
             this.state={
-                unit:'mera',
+                unit:'komad',
                 length:0,
                 height:0,
                 width:0,
@@ -36,10 +36,10 @@ class ProductSize extends React.Component<IProps, IState> {
         }
 
         componentWillMount(){
-            console.log('this.propssize',this.props.size)
+          
             if(this.props.size&&this.props.size!=''){
                 const arr:string[]=this.props.size.split('x')
-                console.log('what is arr')
+       
                 switch (arr.length){
                     case 3:
                         this.setState({length:parseInt(arr[2])})
@@ -57,7 +57,7 @@ class ProductSize extends React.Component<IProps, IState> {
             this.setState({unit:e},() =>{
 
                 switch (e){
-                    case 'mera':
+                    case 'komad':
                     let {width,length,height}=this.state;
                     
                     if(height&&height>0&&width&&width>0){
@@ -82,7 +82,7 @@ class ProductSize extends React.Component<IProps, IState> {
                     }
                     if(height&&height>0){
                         var heightParse=height+''
-                        console.log('hwat is heighParse',heightParse)
+           
                     }else{
                         heightParse=''
                     }
@@ -105,7 +105,7 @@ class ProductSize extends React.Component<IProps, IState> {
                     break;
                     case 'm':
                     this.setState({size:''},()=>{
-                        console.log('what is size in state',this.state.size)
+               
                         this.props.onChange('size',this.state.size)})
                     break;
                     case 'm2':
@@ -115,7 +115,7 @@ class ProductSize extends React.Component<IProps, IState> {
                     this.setState({size:''},()=>this.props.onChange('size',this.state.size))
                     break;
                     default:
-                    console.log('non existent')
+          
                 }
             }
         
@@ -123,11 +123,11 @@ class ProductSize extends React.Component<IProps, IState> {
             this.props.onChange('unit',e)
         }
         onChangeSize(key:string,e:string){
-            console.log('what is e type', typeof e)
+
             this.setState({[key]:e},()=>{
-                console.log('what is unit',this.state.unit)
+            
                 switch (this.state.unit){
-                    case 'mera':
+                    case 'komad':
                     
                     let {width,length,height}=this.state;
                     
@@ -153,7 +153,7 @@ class ProductSize extends React.Component<IProps, IState> {
                     }
                     if(height&&height>0){
                         var heightParse=height+''
-                        console.log('hwat is heighParse',heightParse)
+                
                     }else{
                         heightParse=''
                     }
@@ -207,7 +207,7 @@ class ProductSize extends React.Component<IProps, IState> {
             return (
                 <div>
                         <Select onChange={this.onSelectUnit} defaultValue={this.state.unit}>
-                            <Select.Option key={'mera'} value={'mera'}>
+                            <Select.Option key={'komad'} value={'komad'}>
                                 merna jedinica
                             </Select.Option>
                             <Select.Option key={"m"} value={"m"}>
@@ -221,7 +221,7 @@ class ProductSize extends React.Component<IProps, IState> {
                             </Select.Option>
                         </Select>
                        {
-                            (this.state.unit==='mera')&&( 
+                            (this.state.unit==='komad')&&( 
                                 <div>
                                     <Form.Item label="Height">
                                         {getFieldDecorator('height', {
@@ -239,7 +239,7 @@ class ProductSize extends React.Component<IProps, IState> {
                             )
                         }
                         {   
-                           ( (this.state.unit==='mera'))&&( 
+                           ( (this.state.unit==='komad'))&&( 
                                
                         <div>
                                     <Form.Item label="Width">
@@ -258,7 +258,7 @@ class ProductSize extends React.Component<IProps, IState> {
                             ) 
                         }
                         {   
-                            (this.state.unit==='mera')&&( 
+                            (this.state.unit==='komad')&&( 
                                 <div>
                                 <Form.Item label="Length">
                                     {getFieldDecorator('length', {

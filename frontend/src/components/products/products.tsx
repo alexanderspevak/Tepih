@@ -1,13 +1,12 @@
 import { Button } from 'antd';
 import * as React from 'react';
-//import WrappedUser from './user';
 import * as queries from '../../queries/queries';
 import WrappedProduct from './updateCreateProduct';
-import WrappedBuy from './Buy';
+import WrappedBuy from '../buy/Buy';
 import { Query } from 'react-apollo';
 import {Table} from 'antd';
-import {graphql,compose, Mutation} from 'react-apollo';
-import {DELETE_PRODUCT,UPDATE_PRODUCTTABLE,GET_PRODUCTTABLE,GET_LOCAL_MANUFACTURERS,UPDATE_LOCAL_MANUFACTURERS, GET_PRODUCTS} from '../../queries/queries';
+import { Mutation} from 'react-apollo';
+import {DELETE_PRODUCT,  GET_PRODUCTS} from '../../queries/queries';
 import Picmodal from './picmodal';
 import {IRow} from '../../interface';
 
@@ -29,11 +28,7 @@ interface IProps {
 
     }
   }):void
-  UPDATE_LOCAL_MANUFACTURERS({
-    variables:{
 
-    }
-  }):void
 }
 interface IState {
     show:{
@@ -64,7 +59,70 @@ class Products extends React.Component<IProps, IState> {
         }
         this.onChange=this.onChange.bind(this);
     }
+
+    componentWillUnmount(){
+
+    }
    async componentDidMount() {
+    type ColumnType = {
+        key: string,
+        title: string,
+        dataIndex: string,
+        render?: (text: any, row: any, index: any) => React.ReactElement<any>;
+    }
+    type ProductData = {
+        products:Array<{id:number}>
+        }|null
+    
+        
+    
+    const columns =[{
+        title:'Name',
+        dataIndex:'name',
+        key:'name',
+    } as ColumnType,
+    {
+        title:'Type',
+        dataIndex:'type',
+        key:'type'  
+    } as ColumnType,
+    {
+        title:'Price',
+        dataIndex:'price',
+        key:'price'  
+    } as ColumnType,
+    {
+        title:'Unit',
+        dataIndex:'unit',
+        key:'unit'  
+    } as ColumnType,
+    {
+        title:'Size',
+        dataIndex:'size',
+        key:'size'  
+    } as ColumnType,
+    {
+        title:'Color',
+        dataIndex:'color',
+        key:'color'  
+    } as ColumnType,
+    {
+        title:'Description',
+        dataIndex:'description',
+        key:'description' 
+    } as ColumnType,
+    {
+        title:'Picture',
+        dataIndex:'pic',
+        key:'pic'  
+    } as ColumnType,
+    {
+        title:'Manufacturer',
+        dataIndex:'manufacturerName',
+        key:'Manufacturer'
+    } as ColumnType
+    ]   
+
     const editColumn = {
         title:'Edit',
         dataIndex:'edit',
@@ -73,6 +131,7 @@ class Products extends React.Component<IProps, IState> {
        
             return(
                 <Button onClick={()=>{
+                    
                     this.onChange('showProduct',row)}}>
                     edit
                 </Button>
@@ -87,12 +146,14 @@ class Products extends React.Component<IProps, IState> {
        
             return(
                 <Button onClick={()=>{
+          
                     this.onChange('buyProduct',row)}}>
                     Naruči
                 </Button>
             )
         }
     } as ColumnType;
+
         this.setState({products:await queries.products()})
         if(this.props.admin){
             columns.push(editColumn);
@@ -127,7 +188,10 @@ class Products extends React.Component<IProps, IState> {
             }
         })
         }else{
-            columns.push(BuyColumn)
+      
+                columns.push(BuyColumn)
+            
+            
         }
         this.setState({dataColumns:columns})
     }
@@ -136,6 +200,8 @@ class Products extends React.Component<IProps, IState> {
         if(fn){fn()};
     }
     public render() { 
+                            
+
         return ( 
             <div>
                 <Query query={queries.GET_PRODUCTS}>
@@ -185,78 +251,5 @@ class Products extends React.Component<IProps, IState> {
             )
     }
 }
-export default compose(
-    graphql(UPDATE_PRODUCTTABLE,{name:'UPDATE_PRODUCTTABLE'}),
-    graphql(UPDATE_LOCAL_MANUFACTURERS,{name:'UPDATE_LOCAL_MANUFACTURERS'}),
-    graphql(GET_LOCAL_MANUFACTURERS,{
-        props:({data:manufacturers}:any)=>{
-            return manufacturers.manufacturers;
-        }
-    }),
+export default Products;
 
-    graphql(GET_PRODUCTTABLE,{
-        props:({data:productTable} :any )=>{
-      
-            return productTable.productTable;
-        }
-    })
-)(Products);
-
-type ColumnType = {
-    key: string,
-    title: string,
-    dataIndex: string,
-    render?: (text: any, row: any, index: any) => React.ReactElement<any>;
-}
-type ProductData = {
-    products:Array<{id:number}>
-    }|null
-
-    
-
-const columns =[{
-    title:'Name',
-    dataIndex:'name',
-    key:'name',
-} as ColumnType,
-{
-    title:'Type',
-    dataIndex:'type',
-    key:'type'  
-} as ColumnType,
-{
-    title:'Price',
-    dataIndex:'price',
-    key:'price'  
-} as ColumnType,
-{
-    title:'Unit',
-    dataIndex:'unit',
-    key:'unit'  
-} as ColumnType,
-{
-    title:'Size',
-    dataIndex:'size',
-    key:'size'  
-} as ColumnType,
-{
-    title:'Color',
-    dataIndex:'color',
-    key:'color'  
-} as ColumnType,
-{
-    title:'Description',
-    dataIndex:'description',
-    key:'description' 
-} as ColumnType,
-{
-    title:'Picture',
-    dataIndex:'pic',
-    key:'pic'  
-} as ColumnType,
-{
-    title:'Manufacturer',
-    dataIndex:'manufacturerName',
-    key:'Manufacturer'
-} as ColumnType
-]

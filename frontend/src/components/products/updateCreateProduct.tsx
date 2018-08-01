@@ -68,7 +68,7 @@ class Product extends React.Component<IProps, IState> {
             manufacturer_id:values.manufacturer_id,
             id:values.id,
         })
-    }
+    }   
 
     public onChange(key:string,e:any):void{
         if(e.target){
@@ -131,8 +131,6 @@ class Product extends React.Component<IProps, IState> {
                     onOk={this.handleSubmit.bind(this,updateCreateProduct)}
                     onCancel={()=>this.props.onCancel('showProduct',false)}
                 >
-
-                
                     <Form layout="vertical">
                         <Row>
                             <Col md={11}>

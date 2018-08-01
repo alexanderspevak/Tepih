@@ -49,13 +49,7 @@ export async function products():Promise<{}> {
 
 `
 
-export const GET_PRODUCTTABLE =gql`
-{
-  productTable @client{
-    productTable
-  }
-}
-`;
+
 
 
 export const GET_LOCAL_MANUFACTURERS =gql`
@@ -66,11 +60,6 @@ export const GET_LOCAL_MANUFACTURERS =gql`
 }
 `;
 
-export const UPDATE_LOCAL_MANUFACTURERS=gql`
-mutation UpdateLocalManufacturers($values:[Any]) {
-  updateLocalManufacturers(value:$values)  @client
-  }
-`;
 
 
 export const UPDATE_PRODUCTTABLE=gql`
@@ -122,5 +111,37 @@ mutation updateProduct($input:UpdateCreateProduct!){
     manufacturer_id
     manufacturerName
   }
+}
+`
+
+export const GET_LOCAL_ORDER_ITEMS=gql`
+  query{
+    orderItems @client{
+      orderItems
+    }
+  }
+    `
+
+export const UPDATE_LOCAL_ORDER_ITEMS=gql`
+  mutation updateOrderItems($input:OrderItems){
+    updateOrderItems(input:$input) @client
+}
+`
+
+export const DELETE_LOCAL_ORDER_ITEM=gql`
+  mutation deleteOrderItem($input:String!){
+   deleteOrderItem(input:$input) @client
+}
+`
+export const GET_LOCAL_ORDER_USER_DATA=gql`
+  query{
+    orderUserData @client{
+      orderUserData   
+    }
+  }
+    `
+export const UPDATE_LOCAL_ORDER_USER_DATA=gql`
+  mutation updateOrderUserData($input:String!){
+   updateOrderUserData(input:$input) @client
 }
 `
