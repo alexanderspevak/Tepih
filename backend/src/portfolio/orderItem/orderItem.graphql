@@ -14,9 +14,10 @@ type OrderItem {
     product_id: Int!
     quantity: Int!
     size:String
-    order_Id:Int!
+    order_id:Int!
     Order:Order
     Product:Product
+    ammount:Int!
 }
 
 input updateCreateOrderItem {
@@ -26,4 +27,5 @@ input updateCreateOrderItem {
     size:String
     order_id:Int
     status:String
+    ammount:Int!
 }

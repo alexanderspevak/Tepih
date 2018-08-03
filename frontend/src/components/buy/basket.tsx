@@ -1,6 +1,6 @@
 import * as React from 'react';
 // import {IRow} from '../../interface';
-import {Form,Modal} from 'antd';
+import {Form,Modal,message} from 'antd';
 import {graphql,compose} from 'react-apollo'
 import {GET_LOCAL_ORDER_ITEMS,GET_PRODUCTS,DELETE_LOCAL_ORDER_ITEM} from '../../queries/queries';
 import {Redirect} from 'react-router';
@@ -19,6 +19,7 @@ interface IState {
     redirect?:boolean,
     data?:any
     showUser?:boolean,
+    alert?:boolean
  }
 
 class Basket extends React.Component<IProps,IState>{
@@ -27,7 +28,9 @@ class Basket extends React.Component<IProps,IState>{
         this.state={
             redirect:false,
             data:[],
-            showUser:false
+            showUser:false,
+            alert:false
+
         }
         this.showUser=this.showUser.bind(this);
         
@@ -59,14 +62,23 @@ class Basket extends React.Component<IProps,IState>{
         this.setState({showUser:true})
     }
 
-    handleSubmit(){
 
-        this.setState({showUser:true})
- 
-    }
 
     onOkCancel(key:string,value:boolean|string){
-        this.setState({[key]:value})
+        if(key==='showUser'&&this.props.orderItems){
+            if(this.props.orderItems.length+1==1){
+              this.setState({alert:true},()=>{
+                  message.info('Vaša porudžbina je prayna')
+                 
+              })
+            }else{
+                this.setState({showUser:true})
+            }
+        }else{
+            this.setState({[key]:value})
+        }
+        console.log(this.props.orderItems,key)
+        
     }
     onClick(e:any){
         console.log(e)
@@ -93,7 +105,7 @@ class Basket extends React.Component<IProps,IState>{
             >
                         <table>
                             <tbody>
-                                <tr>
+                                <tr key={1}>
                                     <th>Naziv proizvoda:</th>
                                     <th>Proizvođač:</th>
                                     <th>Veličina proizvoda</th>
@@ -103,7 +115,8 @@ class Basket extends React.Component<IProps,IState>{
                                     <th>obriši</th>
                                 </tr>
                                     {this.state.data.map((item:any)=>{
-                                        amount=amount+item. amount;
+                                        console.log('itemxx',item)
+                                        amount=amount+item. ammount;
                                         return(
                                             <tr key={item.key}>
                                             <td>
@@ -122,7 +135,7 @@ class Basket extends React.Component<IProps,IState>{
                                                 {item.quantity}
                                             </td>
                                             <td>
-                                                {item.amount}
+                                                {item.ammount}
                                             </td>
                                             <td>
                                                 <button key={item.key} onClick={this.onClick.bind(this,item.key)}>
@@ -138,7 +151,9 @@ class Basket extends React.Component<IProps,IState>{
                         </table>
                         Cena ukupno:{amount}
                 </Modal>
-                {this.state.showUser&&<WrappedUser onCancel={this.onOkCancel.bind(this      )}/>}
+                {this.state.showUser&&<WrappedUser onCancel={this.onOkCancel.bind(this)}/>}
+
+                }
             </div>
         )
     }

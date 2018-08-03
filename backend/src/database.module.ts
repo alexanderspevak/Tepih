@@ -7,4 +7,4 @@ import {PortfolioModule} from './portfolio/portfolio.module';
     components: [databaseProvider],
     exports: [databaseProvider],
 })
-export class DatabaseModule {}
+export class DatabaseModule {}  

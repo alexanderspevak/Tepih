@@ -145,3 +145,8 @@ export const UPDATE_LOCAL_ORDER_USER_DATA=gql`
    updateOrderUserData(input:$input) @client
 }
 `
+
+export const CREATE_CUSTOMER_ORDER_ORDERITEM=gql`mutation CreateCustomerOrderOrderItem($input:OrderType){
+  createCustomerOrderOrderItem(input:$input)
+}
+`

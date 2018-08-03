@@ -62,6 +62,12 @@ export class OrderItem extends Model<OrderItem> {
     })
     public status: string;
 
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    public ammount: number;
+
     @CreatedAt
     public createdAt: Date;
 

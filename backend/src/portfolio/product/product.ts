@@ -25,8 +25,6 @@ export class ProductResolver {
     const products=product.map((item)=>{
       item.manufacturerName=item.get('Manufacturer').get('name');
       item.ManufacturerId=item.Manufacturer.Id;
-      // console.log('what is producData',item.dataValues)
-      // console.log('what is Manufacturer',item.dataValues.Manufacturer.dataValues.id,item.dataValues.Manufacturer.dataValues.name)
       return item;
     })
     return products;
@@ -62,7 +60,6 @@ export class ProductResolver {
  @Mutation()
  async updateProduct(obj, {input}){
   const p =  await this.product.upsert(input, {returning:true});
-  console.log('what is p',p[0])
   return p[0];
 }
 }

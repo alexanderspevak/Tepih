@@ -1,0 +1,10 @@
+input OrderType {
+    customer:updateCreateCustomer
+    order:updateCreateOrder
+    orderItem:[updateCreateOrderItem]
+
+}
+
+type Mutation {
+    createCustomerOrderOrderItem(input: OrderType) : Boolean
+}

@@ -26,19 +26,20 @@ interface IProps {
     productName?:string,
     manufacturerName?:string,
     status?:String,
-    amount?:number|undefined,
+    ammount?:number|undefined,
     price?:string,
     redirect?:boolean,
     productId?:number,
     unit?:string,
-    key?:any
+    key?:any,
+    product_id?:number
   
   }
 class Buy extends React.Component<IProps,IState>{
     constructor(props:any){
         super(props)
         this.state={
-            amount:0,
+            ammount:0,
             height:1,
             width:1,
             length:1    ,
@@ -53,40 +54,40 @@ class Buy extends React.Component<IProps,IState>{
         this.orderGoToCatalogue=this.orderGoToCatalogue.bind(this)
     }
     componentDidMount(){
-
         if(this.props.values.manufacturerName&&this.props.values.name&&this.props.values.unit){
             this.setState({
                 manufacturerName:this.props.values.manufacturerName, 
                 productName:this.props.values.name,
                 unit:this.props.values.unit,
-                key:uuidv1()
+                key:uuidv1(),
+                
             })
         }
         const unit=this.props.values.unit
         var price=this.props.values.price;
-        var amount=0;
+        var ammount=0;
         switch(unit){
             case 'm3':
-            if(price){amount=parseInt(price)/1000000}
+            if(price){ammount=parseInt(price)/1000000}
             break;
             case 'm2':
-            if(price){amount=parseInt(price)/10000}
+            if(price){ammount=parseInt(price)/10000}
             this.setState({length:100});
             break;
             case 'm':
-            if(price){amount=parseInt(price)/100}
+            if(price){ammount=parseInt(price)/100}
             this.setState({length:100,width:100});
             break;
             default:
             if(price){
-                amount=parseInt(price)
+                ammount=parseInt(price)
                 this.setState({length:100,width:100,height:100});
             }else{
-                amount=0
+                ammount=0
             }
         }
-        if(amount){
-            this.setState({amount})
+        if(ammount){
+            this.setState({ammount})
         }
         
     }
@@ -105,11 +106,11 @@ class Buy extends React.Component<IProps,IState>{
                         if(height&&width&&length&&quantity){
                             var arr=[height/100,width/100,length/100,quantity,price]
                         
-                            var amount=arr.reduce((accumulator:any,currentValue:any)=>{
+                            var ammount=arr.reduce((accumulator:any,currentValue:any)=>{
                                 return accumulator*currentValue
                             },1)
        
-                            this.setState({amount})
+                            this.setState({ammount})
                             return;
             }})}else{
                 this.setState({ [key]: e.target.value})
@@ -122,7 +123,9 @@ class Buy extends React.Component<IProps,IState>{
         const sendObj:any={...this.state}
         delete sendObj['redirect'];
         sendObj.size=this.props.values.size
-       
+        sendObj.product_id=this.props.values.id
+        console.log('sendObject',sendObj)
+        console.log('props',this.props.values)
         this.props.updateOrderItems({variables:{input:JSON.stringify(sendObj)}})
         this.setState({redirect:true});
     }
@@ -155,9 +158,7 @@ class Buy extends React.Component<IProps,IState>{
             )
         });
         return (
-           
             <div>
-               
             <Modal
                 maskClosable={false}
                 style={{ top: '5vh' }}
@@ -274,7 +275,7 @@ class Buy extends React.Component<IProps,IState>{
                     <tr>
                         <td>
                             <h1>Suma:</h1>
-                            <h1>{this.state.amount}</h1>
+                            <h1>{this.state.ammount}</h1>
                         </td>
                     </tr>
                     </tbody>

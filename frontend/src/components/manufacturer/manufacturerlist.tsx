@@ -17,7 +17,6 @@ interface IState{
 
 
 class ManufacturerList extends React.Component<IProps, IState> {
-    
         products:any=null;
         constructor(props: any){
             super(props);

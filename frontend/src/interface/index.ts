@@ -9,5 +9,6 @@ export interface IRow {
         manufacturerName?:string,
         manufacturer_id?:number|string,
         id?:number|null, 
-        pic: {  props: { src: String }} 
+        pic: {  props: { src: String }}
+    
     }

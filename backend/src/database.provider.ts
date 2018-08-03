@@ -13,7 +13,7 @@ export const databaseProvider = {
     useFactory: () => {
 
         const sequelize = new Sequelize({
-            username: 'alexandr',
+            username: 'alexander',
             password: 'foxmedia',
             database: 'tepih',
             host: '127.0.0.1',

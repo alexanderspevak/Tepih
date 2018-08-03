@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Products from './components/products/products';
 import Basket from './components/buy/basket';
+import Hvala from './components/hvala/Hvala';
 import { ApolloProvider } from 'react-apollo';
 import {client} from './client';
 
@@ -25,6 +26,7 @@ class App extends React.Component {
               <Route exact={true} path="/products" render={(props:any)=><Products {...props} admin={false }/>} />
               <Route exact={true} path="/context" component={Wrap} />
               <Route exact={true} path="/basket" component={Basket} />
+              <Route exact={true} path="/hvala" component={Hvala} />
             </Switch>
         </div>
       </ApolloProvider>

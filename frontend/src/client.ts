@@ -15,14 +15,8 @@ const defaultState={
   orderUserData:{
     __typename:'OrderUserData',
     orderUserData:`{
-      "address":"asdfasdf",
-      "city":"asfsaf",
-      "email":"asfsaf",
-      "name":"dfsf",
-      "phone":"aaa",
-      "surname":"sdfsfd",
-      "message":"dsfsdf",
-      "date":"sdfsdf"
+
+      "date":"Wed Aug 08 1900 17:33:10 GMT+0200 (Central European Summer Time)"
   }`
   }
 }
@@ -72,20 +66,21 @@ const stateLink=withClientState({
         const query=GET_LOCAL_ORDER_USER_DATA
         const previousState=cache.readQuery({query});
         console.log('client console',variables.input)
-        console.log('client console',previousState)
+        console.log('client console',previousState.orderUserData)
 
+        const data={
+          ...previousState,
+          orderUserData:{
+            ...previousState.orderUserData,
+            orderUserData:JSON.stringify(variables.input)
+          }  
+         }
+         cache.writeQuery({query,data})
         return null
-
-
       }
     },
-
   },
-
 })
-
-
-
 export const client = new ApolloClient({
     link: ApolloLink.from([
       stateLink,
