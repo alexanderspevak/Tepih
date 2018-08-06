@@ -5,6 +5,7 @@ import {
     OrderProvider,
     CustomerProvider,
     ProductProvider,
+    AdminProvider
 } from './portfolio.provider';
 
 import {ManufacturerResolver} from './manufacturer/manufacturer';
@@ -13,6 +14,7 @@ import {CustomerResolver} from './customer/customer';
 import {OrderResolver} from './order/order';
 import {OrderItemResolver} from './orderItem/orderItem';
 import {HigherOrderResolver} from './higherOrderResolvers/higherOrderResolvers';
+import {AdminResolver} from './admin/admin';
 
 @Module({
     components: [
@@ -26,8 +28,9 @@ import {HigherOrderResolver} from './higherOrderResolvers/higherOrderResolvers';
         CustomerResolver,
         OrderResolver,
         OrderItemResolver,
-        HigherOrderResolver
-
+        HigherOrderResolver,
+        AdminResolver,
+        AdminProvider
     ],
     exports: [
         ManufacturerProvider,
@@ -37,7 +40,9 @@ import {HigherOrderResolver} from './higherOrderResolvers/higherOrderResolvers';
         ProductProvider,
         ManufacturerResolver,
         ProductResolver,
-        HigherOrderResolver
+        HigherOrderResolver,
+        AdminResolver,
+        AdminProvider
     ],
 })
 export class PortfolioModule {}

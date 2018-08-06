@@ -6,6 +6,7 @@ import {
     OrderItem,
     Order,
     Product,
+    Admin
 } from '../models';
 
 export const databaseProvider = {
@@ -25,6 +26,7 @@ export const databaseProvider = {
             OrderItem,
             Order,
             Product,
+            Admin
           ]);
 
         // sequelize.sync({ force: false });

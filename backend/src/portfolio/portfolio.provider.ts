@@ -8,6 +8,7 @@ import {
     OrderItem,
     Order,
     Product,
+    Admin
 } from '../../models';
 
 export const ManufacturerProvider = {
@@ -34,3 +35,8 @@ export const ProductProvider = {
     provide: 'ProductRepository',
     useValue: Product,
 };
+
+export const AdminProvider={
+    provide:'AdminRepository',
+    useValue:Admin
+}

@@ -13,6 +13,7 @@
     "allowJs": true,
     "outDir": "./dist",
     "baseUrl": "./src"
+
   },
   "include": [
     "src/**/*",

@@ -8,6 +8,7 @@ import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql';
 import { ManufacturerProvider } from 'portfolio/portfolio.provider';
 import * as cors from 'cors';
 
+
 @Module({
   imports: [ GraphQLModule, DatabaseModule, PortfolioModule],
   components: [],
@@ -16,6 +17,7 @@ import * as cors from 'cors';
 })
 export class AppModule implements NestModule{
   constructor(private readonly graphQLFactory: GraphQLFactory) {}
+
   configure(consumer: MiddlewareConsumer){
     const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql');
     const schema = this.graphQLFactory.createSchema({ typeDefs });
@@ -23,7 +25,11 @@ export class AppModule implements NestModule{
     .apply(cors({origin: 'http://localhost:3000'})).forRoutes('/graphql')
     .apply(graphiqlExpress({ endpointURL: '/graphql' }))
     .forRoutes('/graphiql')
-    .apply(graphqlExpress(req => ({ schema, rootValue: req })))
+    .apply(graphqlExpress(req => ({ schema, 
+      rootValue: req,
+      context:{
+        secret:'4wsdfsadf654sdf64sadf654'
+    } })))
     .forRoutes('/graphql');
   }
 }
