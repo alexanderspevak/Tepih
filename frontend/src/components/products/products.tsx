@@ -31,6 +31,8 @@ interface IProps {
 
 }
 interface IState {
+    filteredInfo:any,
+    sortedInfo:any,
     show:{
         showUser:boolean,
         showPic:boolean,
@@ -48,6 +50,8 @@ class Products extends React.Component<IProps, IState> {
     constructor(props: any){
         super(props);
         this.state={
+            filteredInfo: null,
+            sortedInfo: null,
             show:{
                 showUser:false,
                 showPic:false,
@@ -60,101 +64,120 @@ class Products extends React.Component<IProps, IState> {
         this.onChange=this.onChange.bind(this);
     }
 
-    componentWillUnmount(){
+    handleChange = (pagination:any, filters:any, sorter:any) => {
+        console.log('Various parameters', pagination, filters, sorter);
+        this.setState({
+          filteredInfo: filters,
+          sortedInfo: sorter,
+        });
+      }
 
-    }
    async componentDidMount() {
-    type ColumnType = {
-        key: string,
-        title: string,
-        dataIndex: string,
-        render?: (text: any, row: any, index: any) => React.ReactElement<any>;
-    }
-    type ProductData = {
-        products:Array<{id:number}>
-        }|null
-    
-        
-    
-    const columns =[{
-        title:'Name',
-        dataIndex:'name',
-        key:'name',
-    } as ColumnType,
-    {
-        title:'Type',
-        dataIndex:'type',
-        key:'type'  
-    } as ColumnType,
-    {
-        title:'Price',
-        dataIndex:'price',
-        key:'price'  
-    } as ColumnType,
-    {
-        title:'Unit',
-        dataIndex:'unit',
-        key:'unit'  
-    } as ColumnType,
-    {
-        title:'Size',
-        dataIndex:'size',
-        key:'size'  
-    } as ColumnType,
-    {
-        title:'Color',
-        dataIndex:'color',
-        key:'color'  
-    } as ColumnType,
-    {
-        title:'Description',
-        dataIndex:'description',
-        key:'description' 
-    } as ColumnType,
-    {
-        title:'Picture',
-        dataIndex:'pic',
-        key:'pic'  
-    } as ColumnType,
-    {
-        title:'Manufacturer',
-        dataIndex:'manufacturerName',
-        key:'Manufacturer'
-    } as ColumnType
-    ]   
-
-    const editColumn = {
-        title:'Edit',
-        dataIndex:'edit',
-        key:'edit', 
-        render: (text:any,row:any,index:any) => {
-       
-            return(
-                <Button onClick={()=>{
-                    
-                    this.onChange('showProduct',row)}}>
-                    edit
-                </Button>
-            )
-        }
-    } as ColumnType;
-    const BuyColumn = {
-        title:'',
-        dataIndex:'kupi',
-        key:'kupi', 
-        render: (text:any,row:any,index:any) => {
-       
-            return(
-                <Button onClick={()=>{
-          
-                    this.onChange('buyProduct',row)}}>
-                    Naruči
-                </Button>
-            )
-        }
-    } as ColumnType;
-
         this.setState({products:await queries.products()})
+    }
+
+    public onChange(key:string,value:string|boolean,fn?:Function):void{
+        this.setState({show:{...this.state.show,[key]:value}})
+        if(fn){fn()};
+    }
+
+    public render() { 
+        type ProductData = {
+            products:Array<{id:number}>
+            }|null
+        let { sortedInfo, filteredInfo } = this.state;
+        sortedInfo = sortedInfo || {};
+        filteredInfo = filteredInfo || {};
+        type ColumnType = {
+            key: string,
+            title: string,
+            dataIndex: string,
+            render?: (text: any, row: any, index: any) => React.ReactElement<any>;
+        }
+    
+        const columns =[{
+            title:'Name',
+            dataIndex:'name',
+            key:'name',
+            filters: [
+                { text: 'Joe', value: 'crni tepih' },
+                { text: 'Jim', value: 'beli tephi' },
+              ],
+              filteredValue: this.state.filteredInfo?this.state.filteredInfo.name: null,
+              onFilter: (value:any, record:any) => record.name.includes(value), 
+        } as ColumnType,
+        {
+            title:'Type',
+            dataIndex:'type',
+            key:'type'  
+        } as ColumnType,
+        {
+            title:'Price',
+            dataIndex:'price',
+            key:'price'  
+        } as ColumnType,
+        {
+            title:'Unit',
+            dataIndex:'unit',
+            key:'unit'  
+        } as ColumnType,
+        {
+            title:'Size',
+            dataIndex:'size',
+            key:'size'  
+        } as ColumnType,
+        {
+            title:'Color',
+            dataIndex:'color',
+            key:'color'  
+        } as ColumnType,
+        {
+            title:'Description',
+            dataIndex:'description',
+            key:'description' 
+        } as ColumnType,
+        {
+            title:'Picture',
+            dataIndex:'pic',
+            key:'pic'  
+        } as ColumnType,
+        {
+            title:'Manufacturer',
+            dataIndex:'manufacturerName',
+            key:'Manufacturer'
+        } as ColumnType
+        ]   
+
+        const BuyColumn = {
+            title:'',
+            dataIndex:'kupi',
+            key:'kupi', 
+            render: (text:any,row:any,index:any) => {
+                return(
+                    <Button onClick={()=>{
+                        this.onChange('buyProduct',row)}}>
+                        Naruči
+                    </Button>
+                )
+            }
+        } as ColumnType;
+
+        const editColumn = {
+            title:'Edit',
+            dataIndex:'edit',
+            key:'edit', 
+            render: (text:any,row:any,index:any) => {
+           
+                return(
+                    <Button onClick={()=>{
+                        
+                        this.onChange('showProduct',row)}}>
+                        edit
+                    </Button>
+                )
+            }
+        } as ColumnType;
+
         if(this.props.admin){
             columns.push(editColumn);
             columns.push({
@@ -166,10 +189,9 @@ class Products extends React.Component<IProps, IState> {
                     <Mutation 
                         mutation={DELETE_PRODUCT}
                         update={(cache,{data}) => {
-           
                              const productData=cache.readQuery({query:GET_PRODUCTS})as ProductData
                             if(productData){
-                                const resultData=productData.products.filter((item)=>item.id!=data.deleteProduct.id)
+                                const resultData=productData.products.filter((item:any)=>item.id!=data.deleteProduct.id)
                                 productData.products=resultData
                                 cache.writeQuery({query:GET_PRODUCTS,data:productData})
                             }
@@ -180,7 +202,6 @@ class Products extends React.Component<IProps, IState> {
                                 <Button onClick={()=>{deleteProduct({variables:{value:row.id}})}}>
                                      delete
                                 </Button>
-
                             )
                         }
                     </Mutation>
@@ -188,20 +209,8 @@ class Products extends React.Component<IProps, IState> {
             }
         })
         }else{
-      
                 columns.push(BuyColumn)
-            
-            
         }
-        this.setState({dataColumns:columns})
-    }
-    public onChange(key:string,value:string|boolean,fn?:Function):void{
-        this.setState({show:{...this.state.show,[key]:value}})
-        if(fn){fn()};
-    }
-    public render() { 
-                            
-
         return ( 
             <div>
                 <Query query={queries.GET_PRODUCTS}>
@@ -230,10 +239,9 @@ class Products extends React.Component<IProps, IState> {
                                 return newItem;
                             })}
                             ;
-                            return <Table dataSource={items} columns={this.state.dataColumns}/>;
+                            return <Table dataSource={items} columns={columns} onChange={this.handleChange}/>;
                     }}
                 </Query>
-                
                  {this.state.show.showProduct&&
                     <WrappedProduct onCancel={this.onChange} values={this.state.show.showProduct} mode={"update"}/>
                  }

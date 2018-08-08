@@ -68,7 +68,7 @@ class Basket extends React.Component<IProps,IState>{
         if(key==='showUser'&&this.props.orderItems){
             if(this.props.orderItems.length+1==1){
               this.setState({alert:true},()=>{
-                  message.info('Vaša porudžbina je prayna')
+                  message.info('Vaša porudžbina je prazna')
                  
               })
             }else{

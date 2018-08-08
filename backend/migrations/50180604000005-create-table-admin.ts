@@ -9,9 +9,9 @@ export = {
             login: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                unique:true
+                unique: true,
             },
-            password:Sequelize.STRING
+            password: Sequelize.STRING,
         });
     },
 

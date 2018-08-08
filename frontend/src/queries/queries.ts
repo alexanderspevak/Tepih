@@ -150,3 +150,6 @@ export const CREATE_CUSTOMER_ORDER_ORDERITEM=gql`mutation CreateCustomerOrderOrd
   createCustomerOrderOrderItem(input:$input)
 }
 `
+export const LOGIN=gql`mutation Login($login:String!,$password:String!){
+  login(login:$login,password:$password)
+}`
