@@ -22,10 +22,6 @@ class Hvala extends React.Component<IProps, IState> {
         }
     }
 
-    componentDidMount(){
-        this.props.updateOrderItems({variables:{input:JSON.stringify([])}})
-        console.log(this.props.orderItems)
-    }
     render(){
         if (this.state.redirect){
             return(<Redirect to="/"/>)

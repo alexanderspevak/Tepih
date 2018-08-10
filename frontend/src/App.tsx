@@ -1,16 +1,17 @@
 import 'antd/dist/antd.css'
 import {Wrap} from './context';
 import * as React from 'react';
-import { Route, Switch,withRouter} from 'react-router-dom';
+import { Route, Switch, withRouter} from 'react-router-dom';
 import './App.css';
 import Products from './components/products/products';
 import Basket from './components/buy/basket';
 import Login from './components/login/Login';
 import Hvala from './components/hvala/Hvala';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider} from 'react-apollo';
 import {client} from './client';
 import {AUTH_TOKEN} from './constants';
 import {Redirect} from 'react-router';
+import Administration from './components/administration/orders';
 
 interface IProps{
   history:any
@@ -76,6 +77,7 @@ class App extends React.Component <IProps,IState>{
               <Route exact={true} path="/basket" component={Basket} />
               <Route exact={true} path="/hvala" component={Hvala} />
               <Route exact path="/login" render={(props:any)=><Login {...props} admin={this.state.admin} checkLocalStorage={this.checkLocalStorage}/>} />
+              <Route exact path="/admin"render={(props:any)=><Administration {...props} admin={this.state.admin}/>}/>
             </Switch>
         </div>
       </ApolloProvider>

@@ -16,6 +16,7 @@ export = {
             product_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                onDelete: 'cascade',
                 references: {
                     model: 'Products',
                     key: 'id',
@@ -26,6 +27,11 @@ export = {
             quantity: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+            },
+            amount: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
             },
 
             size: {
@@ -40,6 +46,7 @@ export = {
             order_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                onDelete: 'cascade',
                 references: {
                     model: 'Orders',
                     key: 'id',
@@ -61,5 +68,5 @@ export = {
 
     down: (queryInterface: QueryInterface, Sequelize: SequelizeStatic) => {
         return queryInterface.dropTable('Order_items');
-    }
+    },
 };

@@ -22,11 +22,7 @@ const PicModal:React.SFC<PicModal> = (props) => {
             }
         >
             <img src={props.link} alt={'pic missing'} style={{height:"100%"}}/>
-
-
-            
         </Modal>
-
     </div>)
 }
 

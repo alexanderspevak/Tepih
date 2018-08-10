@@ -15,6 +15,7 @@ module.exports = {
             manufacturer_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                onDelete: 'cascade',
                 references: {
                     model: 'Manufacturers',
                     key: 'id',
@@ -35,11 +36,19 @@ module.exports = {
             },
             description: {
                 type: Sequelize.STRING,
-                allowNull: false
+                allowNull: true
             },
             pic: {
                 type: Sequelize.STRING,
                 allowNull: true
+            },
+            price: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
+            unit: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,

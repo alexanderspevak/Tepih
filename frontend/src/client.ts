@@ -26,19 +26,35 @@ const stateLink=withClientState({
   resolvers:{
     Mutation:{
       updateOrderItems:(_:any,variables:any,{cache}:any)=>{
-        const query=GET_LOCAL_ORDER_ITEMS;
+        var query=GET_LOCAL_ORDER_ITEMS;
         const newItem=variables.input;
+        console.log('new Item', newItem)
         const previousState=cache.readQuery({query});    
-        const data={
-         ...previousState,
-         orderItems:{
-           ...previousState.orderItems,
-            orderItems:[...previousState.orderItems.orderItems,newItem]
-         }  
-        }
-        cache.writeQuery({query,data})
-        return null;
+          const data={
+            ...previousState,
+            orderItems:{
+              ...previousState.orderItems,
+               orderItems:[...previousState.orderItems.orderItems,newItem]
+            }  
+           }
+           cache.writeQuery({query,data})
+           return null;
       },
+      clearOrderItems:(_:any,variables:any,{cache}:any)=>{
+        var query=GET_LOCAL_ORDER_ITEMS;
+        const previousState=cache.readQuery({query});
+        const data={
+          ...previousState,
+          orderItems:{
+            ...previousState.orderItems,
+             orderItems:[]
+          }  
+         }
+         cache.writeQuery({query,data})
+         return null;
+
+      },
+
       deleteOrderItem:(_:any,variables:any,{cache}:any)=>{
         const query=GET_LOCAL_ORDER_ITEMS;
         const previousState=cache.readQuery({query});  
@@ -65,9 +81,6 @@ const stateLink=withClientState({
       updateOrderUserData:(_:any,variables:any,{cache}:any)=>{
         const query=GET_LOCAL_ORDER_USER_DATA
         const previousState=cache.readQuery({query});
-        console.log('client console',variables.input)
-        console.log('client console',previousState.orderUserData)
-
         const data={
           ...previousState,
           orderUserData:{

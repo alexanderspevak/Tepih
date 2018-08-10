@@ -54,7 +54,7 @@ export class Order extends Model<Order> {
     @UpdatedAt
     public updatedAt: Date;
 
-    @BelongsTo(() => Customer)
+    @BelongsTo(() => Customer, { onDelete: 'cascade'}   )
     public Customer: Customer;
 
     @HasMany(() => OrderItem)

@@ -3,9 +3,8 @@ import * as React from 'react';
 import * as queries from '../../queries/queries';
 import WrappedProduct from './updateCreateProduct';
 import WrappedBuy from '../buy/Buy';
-import { Query } from 'react-apollo';
+import { Query , Mutation} from 'react-apollo';
 import {Table} from 'antd';
-import { Mutation} from 'react-apollo';
 import {DELETE_PRODUCT,  GET_PRODUCTS} from '../../queries/queries';
 import Picmodal from './picmodal';
 import {IRow} from '../../interface';
@@ -65,7 +64,6 @@ class Products extends React.Component<IProps, IState> {
     }
 
     handleChange = (pagination:any, filters:any, sorter:any) => {
-        console.log('Various parameters', pagination, filters, sorter);
         this.setState({
           filteredInfo: filters,
           sortedInfo: sorter,
@@ -82,6 +80,7 @@ class Products extends React.Component<IProps, IState> {
     }
 
     public render() { 
+
         type ProductData = {
             products:Array<{id:number}>
             }|null
@@ -95,128 +94,148 @@ class Products extends React.Component<IProps, IState> {
             render?: (text: any, row: any, index: any) => React.ReactElement<any>;
         }
     
-        const columns =[{
-            title:'Name',
-            dataIndex:'name',
-            key:'name',
-            filters: [
-                { text: 'Joe', value: 'crni tepih' },
-                { text: 'Jim', value: 'beli tephi' },
-              ],
-              filteredValue: this.state.filteredInfo?this.state.filteredInfo.name: null,
-              onFilter: (value:any, record:any) => record.name.includes(value), 
-        } as ColumnType,
-        {
-            title:'Type',
-            dataIndex:'type',
-            key:'type'  
-        } as ColumnType,
-        {
-            title:'Price',
-            dataIndex:'price',
-            key:'price'  
-        } as ColumnType,
-        {
-            title:'Unit',
-            dataIndex:'unit',
-            key:'unit'  
-        } as ColumnType,
-        {
-            title:'Size',
-            dataIndex:'size',
-            key:'size'  
-        } as ColumnType,
-        {
-            title:'Color',
-            dataIndex:'color',
-            key:'color'  
-        } as ColumnType,
-        {
-            title:'Description',
-            dataIndex:'description',
-            key:'description' 
-        } as ColumnType,
-        {
-            title:'Picture',
-            dataIndex:'pic',
-            key:'pic'  
-        } as ColumnType,
-        {
-            title:'Manufacturer',
-            dataIndex:'manufacturerName',
-            key:'Manufacturer'
-        } as ColumnType
-        ]   
-
-        const BuyColumn = {
-            title:'',
-            dataIndex:'kupi',
-            key:'kupi', 
-            render: (text:any,row:any,index:any) => {
-                return(
-                    <Button onClick={()=>{
-                        this.onChange('buyProduct',row)}}>
-                        Naruči
-                    </Button>
-                )
-            }
-        } as ColumnType;
-
-        const editColumn = {
-            title:'Edit',
-            dataIndex:'edit',
-            key:'edit', 
-            render: (text:any,row:any,index:any) => {
-           
-                return(
-                    <Button onClick={()=>{
-                        
-                        this.onChange('showProduct',row)}}>
-                        edit
-                    </Button>
-                )
-            }
-        } as ColumnType;
-
-        if(this.props.admin){
-            columns.push(editColumn);
-            columns.push({
-            title:'Delete',
-            dataIndex:'delete',
-            key:'delete',
-            render:(text:any,row:any,index:any)=>{
-                return (
-                    <Mutation 
-                        mutation={DELETE_PRODUCT}
-                        update={(cache,{data}) => {
-                             const productData=cache.readQuery({query:GET_PRODUCTS})as ProductData
-                            if(productData){
-                                const resultData=productData.products.filter((item:any)=>item.id!=data.deleteProduct.id)
-                                productData.products=resultData
-                                cache.writeQuery({query:GET_PRODUCTS,data:productData})
-                            }
-                        }}
-                    >
-                        {
-                            (deleteProduct,{data})=>(
-                                <Button onClick={()=>{deleteProduct({variables:{value:row.id}})}}>
-                                     delete
-                                </Button>
-                            )
-                        }
-                    </Mutation>
-                )
-            }
-        })
-        }else{
-                columns.push(BuyColumn)
-        }
+       
         return ( 
             <div>
                 <Query query={queries.GET_PRODUCTS}>
                     {({loading,error,data})=>{
                         if(loading) return null;
                         if(error) return `Error: ${error}`;
+                        if(data&&data.products){
+                            ///create objects for filters in table columns
+                            const typeArray=data.products.map((product:any)=>{
+                                return product.type
+                            })
+                            const uniqueTypeArray=typeArray.filter((type:string,pos:string)=>{
+                                return typeArray.indexOf(type)===pos
+                            })
+                            var objTypeArray=uniqueTypeArray.map((type:string)=>{
+                                return {text:type,value:type}
+                            })
+                            const manufacturerArray=data.products.map((product:any)=>{
+                                return product.manufacturerName
+                            })
+                            const uniqueManufacturerArray=manufacturerArray.filter((manufacturer:string,pos:string)=>{
+                                return manufacturerArray.indexOf(manufacturer)===pos
+                            })
+                            var objManufacturerArray=uniqueManufacturerArray.map((type:string)=>{
+                                return {text:type,value:type}
+                            })
+                        } 
+                        const columns =[{
+                            title:'Naziv proizvoda',
+                            dataIndex:'name',
+                            key:'name'
+                        } as ColumnType,
+                        {
+                            title:'Tip proizvoda',
+                            dataIndex:'type',
+                            key:'type',
+                            filters:objTypeArray?objTypeArray:[],
+                            filteredValue: this.state.filteredInfo?this.state.filteredInfo.type: null,
+                            onFilter: (value:any, record:any) => record.type.includes(value), 
+                        } as ColumnType,
+                        {
+                            title:'Cena',
+                            dataIndex:'price',
+                            key:'price'  
+                        } as ColumnType,
+                        {
+                            title:'Jedinica mere    ',
+                            dataIndex:'unit',
+                            key:'unit'  
+                        } as ColumnType,
+                        {
+                            title:'Veličina',
+                            dataIndex:'size',
+                            key:'size'  
+                        } as ColumnType,
+                        {
+                            title:'Boja',
+                            dataIndex:'color',
+                            key:'color'  
+                        } as ColumnType,
+                        {
+                            title:'Opis',
+                            dataIndex:'description',
+                            key:'description' 
+                        } as ColumnType,
+                        {
+                            title:'Slika',
+                            dataIndex:'pic',
+                            key:'pic'  
+                        } as ColumnType,
+                        {
+                            title:'Proizvođač',
+                            dataIndex:'manufacturerName',
+                            key:'Manufacturer',
+                            filters:objManufacturerArray?objManufacturerArray:[],
+                            filteredValue: this.state.filteredInfo?this.state.filteredInfo.Manufacturer:null,
+                            onFilter: (value:any, record:any) => record.manufacturerName.includes(value), 
+                        } as ColumnType
+                        ]   
+                
+                        const BuyColumn = {
+                            title:'',
+                            dataIndex:'kupi',
+                            key:'kupi', 
+                            render: (text:any,row:any,index:any) => {
+                                return(
+                                    <Button onClick={()=>{
+                                        this.onChange('buyProduct',row)}}>
+                                        Naruči
+                                    </Button>
+                                )
+                            }
+                        } as ColumnType;
+                        const editColumn = {
+                            title:'Edit',
+                            dataIndex:'edit',
+                            key:'edit', 
+                            render: (text:any,row:any,index:any) => {
+                           
+                                return(
+                                    <Button onClick={()=>{
+                                        
+                                        this.onChange('showProduct',row)}}>
+                                        edit
+                                    </Button>
+                                )
+                            }
+                        } as ColumnType;
+                        if(this.props.admin){
+                            columns.push(editColumn);
+                            columns.push({
+                            title:'Delete',
+                            dataIndex:'delete',
+                            key:'delete',
+                            render:(text:any,row:any,index:any)=>{
+                                return (
+                                    <Mutation 
+                                        mutation={DELETE_PRODUCT}
+                                        update={(cache,{data}) => {
+                                             const productData=cache.readQuery({query:GET_PRODUCTS})as ProductData
+                                            if(productData){
+                                                const resultData=productData.products.filter((item:any)=>item.id!=data.deleteProduct.id)
+                                                productData.products=resultData
+                                                cache.writeQuery({query:GET_PRODUCTS,data:productData})
+                                            }
+                                        }}
+                                    >
+                                        {
+                                            (deleteProduct,{data})=>(
+                                                <Button onClick={()=>{deleteProduct({variables:{value:row.id}})}}>
+                                                     delete
+                                                </Button>
+                                            )
+                                        }
+                                    </Mutation>
+                                )
+                            }
+                        })
+                        }else{
+                                columns.push(BuyColumn)
+                        }
                             {items=data.products.map((item:any,index:number)=>{
                                 
                                 const newItem:any={}

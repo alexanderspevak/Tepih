@@ -84,7 +84,6 @@ class Product extends React.Component<IProps, IState> {
         this.props.form.validateFieldsAndScroll((err:Error, values :any) => {
           if (!err) {
                 updateCreateProduct({variables:{input:this.state}})
-                console.log('itprops onCancel')
             this.props.onCancel('showProduct',false)
           } else{
             console.log('err')

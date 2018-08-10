@@ -1,5 +1,5 @@
 import { Col, Form, Input, Modal ,Row, DatePicker} from 'antd';
-import {GET_LOCAL_ORDER_USER_DATA, UPDATE_LOCAL_ORDER_USER_DATA,GET_LOCAL_ORDER_ITEMS,CREATE_CUSTOMER_ORDER_ORDERITEM, UPDATE_LOCAL_ORDER_ITEMS} from '../../queries/queries'
+import {GET_LOCAL_ORDER_USER_DATA, UPDATE_LOCAL_ORDER_USER_DATA,GET_LOCAL_ORDER_ITEMS,CREATE_CUSTOMER_ORDER_ORDERITEM, UPDATE_LOCAL_ORDER_ITEMS, DELETE_LOCAL_ORDER_ITEMS} from '../../queries/queries'
 import {graphql,compose} from 'react-apollo';
 import {Redirect} from 'react-router';
 import locale from 'antd/lib/date-picker/locale/sr_RS';
@@ -15,6 +15,7 @@ interface IProps {
   updateOrderUserData({variables:{}}):void
   createCustomerOrderOrderItems({variables:{input:{}}}):Promise<boolean>
   updateOrderItems(variables:any):void
+  deleteOrderItems():void
   orderItems:any
 }
 
@@ -91,7 +92,7 @@ class User extends React.Component<IProps, IState> {
                         itemObj.size=itemObj.height;
                         break;
                     }
-                    itemObj.ammount=Math.round(itemObj.ammount);
+                    itemObj.amount=Math.ceil(itemObj.amount);
                     delete itemObj.height
                     delete itemObj.width
                     delete itemObj.length
@@ -101,13 +102,15 @@ class User extends React.Component<IProps, IState> {
                     delete itemObj.unit
                     return itemObj;
                 })
+
+                console.log('orderItem product id',orderItem)
                 const redirect=this.props.createCustomerOrderOrderItems({variables:{input:{customer,order,orderItem}}})
                 redirect
                 .then((val:any)=>{
-                    console.log(val.data.createCustomerOrderOrderItem)
                     if(val.data.createCustomerOrderOrderItem){
                         this.setState({redirect:true},()=>{
-                            this.props.updateOrderItems({variables:{input:JSON.stringify([])}})
+                            console.log('delete basket')
+                            this.props.deleteOrderItems()
                         })
                         
                         this.onChange('message',"");
@@ -287,5 +290,6 @@ export default  compose(
     }),
     graphql(UPDATE_LOCAL_ORDER_ITEMS,{name:'updateOrderItems'}),
     graphql(UPDATE_LOCAL_ORDER_USER_DATA,{name:'updateOrderUserData'}),
-    graphql(CREATE_CUSTOMER_ORDER_ORDERITEM,{name:'createCustomerOrderOrderItems'})
+    graphql(CREATE_CUSTOMER_ORDER_ORDERITEM,{name:'createCustomerOrderOrderItems'}),
+    graphql(DELETE_LOCAL_ORDER_ITEMS,{name:'deleteOrderItems'})
 )(WrappedUser);

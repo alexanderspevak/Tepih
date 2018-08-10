@@ -15,7 +15,7 @@ type Order {
     delivery_date: String
     message:String
     Customer: Customer
-    OrderItem:OrderItem
+    OrderItem:[OrderItem]
 }
 
 input updateCreateOrder {

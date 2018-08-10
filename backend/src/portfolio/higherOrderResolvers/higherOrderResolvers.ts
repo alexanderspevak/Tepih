@@ -21,9 +21,9 @@ export class HigherOrderResolver {
         return  this.order.create(input.input.order);
     })
     .then((order) => {
+        console.log('multiple orderItems', input.input.orderItem);
         input.input.orderItem.map((orderItem) => {
             orderItem.order_id = order.id;
-
             return this.orderItem.create(orderItem);
         });
         return true;

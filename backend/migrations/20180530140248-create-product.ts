@@ -20,6 +20,7 @@ export = {
             manufacturer_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                onDelete: 'cascade',
                 references: {
                     model: 'Manufacturers',
                     key: 'id',
@@ -44,12 +45,22 @@ export = {
 
             description: {
                 type: Sequelize.STRING,
-                allowNull: false,
+                allowNull: true,
             },
             pic: {
                 type: Sequelize.STRING,
                 allowNull: true,
             },
+
+            price: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            unit: {
+                type: Sequelize.STRING,
+                allowNull: false,
+            },
+
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

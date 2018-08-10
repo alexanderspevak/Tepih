@@ -123,10 +123,14 @@ export const GET_LOCAL_ORDER_ITEMS=gql`
     `
 
 export const UPDATE_LOCAL_ORDER_ITEMS=gql`
-  mutation updateOrderItems($input:OrderItems){
+  mutation updateOrderItems($input:String){
     updateOrderItems(input:$input) @client
 }
 `
+export const DELETE_LOCAL_ORDER_ITEMS=gql`
+mutation ClearOrderItems{
+  clearOrderItems @client
+}`
 
 export const DELETE_LOCAL_ORDER_ITEM=gql`
   mutation deleteOrderItem($input:String!){
@@ -152,4 +156,29 @@ export const CREATE_CUSTOMER_ORDER_ORDERITEM=gql`mutation CreateCustomerOrderOrd
 `
 export const LOGIN=gql`mutation Login($login:String!,$password:String!){
   login(login:$login,password:$password)
+}`
+
+export const CUSTOMER_ORDER_ORDER_ITEM=gql`query{
+	customers{
+    id
+    name
+    surname
+    address
+    city
+    phone
+    email
+    Order{
+      delivery_date
+      message
+      id
+      OrderItem{
+        id
+        quantity
+        size
+        amount
+        status
+        product_id
+      }
+    }
+  }
 }`

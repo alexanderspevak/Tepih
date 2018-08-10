@@ -11,7 +11,6 @@ interface IProps {
     orderItems:[string],
     GET_PRODUCTS:any,
     data:any,
-  
     deleteOrderItem(variables:any):void
  }
   
@@ -30,10 +29,8 @@ class Basket extends React.Component<IProps,IState>{
             data:[],
             showUser:false,
             alert:false
-
         }
         this.showUser=this.showUser.bind(this);
-        
     }
 
     static getDerivedStateFromProps(nextProps:any,prevState:any){
@@ -62,8 +59,6 @@ class Basket extends React.Component<IProps,IState>{
         this.setState({showUser:true})
     }
 
-
-
     onOkCancel(key:string,value:boolean|string){
         if(key==='showUser'&&this.props.orderItems){
             if(this.props.orderItems.length+1==1){
@@ -77,13 +72,12 @@ class Basket extends React.Component<IProps,IState>{
         }else{
             this.setState({[key]:value})
         }
-        console.log(this.props.orderItems,key)
-        
     }
+
     onClick(e:any){
-        console.log(e)
         this.props.deleteOrderItem({variables:{input:e}})
     }
+
     render(){
         let amount=0;
         if(this.state.redirect){
@@ -92,17 +86,17 @@ class Basket extends React.Component<IProps,IState>{
         return (
             <div>
                 <Modal
-                maskClosable={false}
-                style={{ top: '5vh' }}
-                width={'90%'}
-                bodyStyle={{ minHeight: '80vh' }}
-                title={'Hello'}
-                visible={true}
-                cancelText={'Vrati se u katalog'}
-                okText={'Naruči'}
-                onOk={this.onOkCancel.bind(this,'showUser',true)}
-                onCancel={this.onOkCancel.bind(this,'redirect',true)}
-            >
+                    maskClosable={false}
+                    style={{ top: '5vh' }}
+                    width={'90%'}
+                    bodyStyle={{ minHeight: '80vh' }}
+                    title={'Hello'}
+                    visible={true}
+                    cancelText={'Vrati se u katalog'}
+                    okText={'Naruči'}
+                    onOk={this.onOkCancel.bind(this,'showUser',true)}
+                    onCancel={this.onOkCancel.bind(this,'redirect',true)}
+                >
                         <table>
                             <tbody>
                                 <tr key={1}>
@@ -115,8 +109,7 @@ class Basket extends React.Component<IProps,IState>{
                                     <th>obriši</th>
                                 </tr>
                                     {this.state.data.map((item:any)=>{
-                                        console.log('itemxx',item)
-                                        amount=amount+item. ammount;
+                                        amount=amount+item. amount;
                                         return(
                                             <tr key={item.key}>
                                             <td>
@@ -135,7 +128,7 @@ class Basket extends React.Component<IProps,IState>{
                                                 {item.quantity}
                                             </td>
                                             <td>
-                                                {item.ammount}
+                                                {item.amount}
                                             </td>
                                             <td>
                                                 <button key={item.key} onClick={this.onClick.bind(this,item.key)}>
@@ -151,9 +144,7 @@ class Basket extends React.Component<IProps,IState>{
                         </table>
                         Cena ukupno:{amount}
                 </Modal>
-                {this.state.showUser&&<WrappedUser onCancel={this.onOkCancel.bind(this)}/>}
-
-                }
+                    {this.state.showUser&&<WrappedUser onCancel={this.onOkCancel.bind(this)}/>}
             </div>
         )
     }

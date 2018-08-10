@@ -7,20 +7,22 @@ export = {
     up: (queryInterface: QueryInterface, Sequelize: SequelizeStatic) => {
         return queryInterface.addColumn(
             'Order_items',
-            'ammount',
+            'product_id',
             {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                onDelete:'cascade',
-                defaultValue:0,
-
-            })
+                onDelete: 'cascade',
+                references: {
+                    model: 'Products',
+                    key: 'id',
+                    as: 'product_id',
+                },
+            });
         },
     down: (queryInterface: QueryInterface, Sequelize: SequelizeStatic) => {
         return queryInterface.removeColumn(
             'Order_items',
-            'ammount',
-            
+            'product_id',
         );
     },
 };

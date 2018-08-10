@@ -18,7 +18,7 @@ type Product {
     color: String
     description:String
     pic: String
-    price: String
+    price: Int
     unit:String
     Manufacturer:Manufacturer
     manufacturerName:String
@@ -34,6 +34,6 @@ input UpdateCreateProduct {
     color: String
     description:String
     pic: String
-    price: String
+    price: Int
     unit:String
 }

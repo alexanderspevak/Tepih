@@ -66,7 +66,7 @@ export class OrderItem extends Model<OrderItem> {
         type: DataType.STRING,
         allowNull: false,
     })
-    public ammount: number;
+    public amount: number;
 
     @CreatedAt
     public createdAt: Date;
@@ -74,9 +74,9 @@ export class OrderItem extends Model<OrderItem> {
     @UpdatedAt
     public updatedAt: Date;
 
-    @BelongsTo(() => Order)
+    @BelongsTo(() => Order, { onDelete: 'cascade'})
     public Order: Order;
 
-    @BelongsTo(() => Product)
+    @BelongsTo(() => Product, { onDelete: 'cascade'})
     public Product: Product;
 }

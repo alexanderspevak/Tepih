@@ -65,26 +65,24 @@ export class Product extends Model<Product> {
     public description: string;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.INTEGER,
         allowNull: false,
     })
-    public price: string;
+    public price: number;
 
     @Column({
         type: DataType.STRING,
         allowNull: true,
-        validate:{
-            fn:function(val){
-                console.log('what is val',val)
-                if(val=='komad' || val=='m2' || val=='m3'||val=='m'){   
-                    console.log('logis is problem')
+        validate: {
+            fn(val){
+                if(val === 'komad' || val === 'm2' || val === 'm3' ||  val === 'm'){
+                    console.log('logis is problem');
                     return this;
-       
                 }
-                console.log('throwww')
-                throw new Error('valid units are m2, m3 or komad')
+                console.log('throwww');
+                throw new Error('valid units are m2, m3 or komad');
             }
-        }
+        },
     })
     public unit: string;
 
@@ -100,9 +98,9 @@ export class Product extends Model<Product> {
     @UpdatedAt
     public updatedAt: Date;
 
-    @BelongsTo(() => Manufacturer)
+    @BelongsTo(() => Manufacturer, { onDelete: 'cascade'})
     public Manufacturer: Manufacturer;
 
-    @HasMany(() => OrderItem,{onDelete:'cascade'})
+    @HasMany(() => OrderItem)
     public OrderItem: OrderItem[];
 }

@@ -1,7 +1,6 @@
 import { Query, Resolver, ResolveProperty, Mutation} from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
-import {Customer} from '../../../models';
-import {Order} from '../../../models';
+import {Customer, OrderItem, Order} from '../../../models';
 
 @Resolver()
 export class CustomerResolver {
@@ -10,12 +9,16 @@ export class CustomerResolver {
   private readonly customer: typeof Customer,
   @Inject('OrderRepository')
   private readonly order: typeof Order,
+  @Inject('OrderItemRepository')
+  private readonly orderItem: typeof OrderItem,
    ){}
 
   @Query('customers')
   async getCustomers(obj, args, context, info) {
       const customer = await this.customer.findAll({include: [
-     {model: this.order, as: 'Order' },
+     {model: this.order, as: 'Order',
+     include: [{model: this.orderItem, as: 'OrderItem'}],
+     },
     ]});
       return customer;
   }

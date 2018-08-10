@@ -11,6 +11,7 @@ module.exports = {
             product_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                onDelete: 'cascade',
                 references: {
                     model: 'Products',
                     key: 'id',
@@ -20,6 +21,11 @@ module.exports = {
             quantity: {
                 type: Sequelize.INTEGER,
                 allowNull: false
+            },
+            amount: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                defaultValue: 0
             },
             size: {
                 type: Sequelize.STRING,
@@ -32,6 +38,7 @@ module.exports = {
             order_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                onDelete: 'cascade',
                 references: {
                     model: 'Orders',
                     key: 'id',

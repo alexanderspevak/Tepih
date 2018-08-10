@@ -15,19 +15,18 @@ export class ProductResolver {
 
   @Query('products')
   async getProducts(obj, args, context, info) {
-     const product:any=await this.product.findAll({
+     const product: any = await this.product.findAll({
       include: [
         {model: this.manufacturer, as: 'Manufacturer'},
         {model: this.orderItem, as: 'OrderItem'},
       ],
     });
-    
-    const products=product.map((item)=>{
-      item.manufacturerName=item.get('Manufacturer').get('name');
-      item.ManufacturerId=item.Manufacturer.Id;
+     const products = product.map((item) => {
+      item.manufacturerName = item.get('Manufacturer').get('name');
+      item.ManufacturerId = item.Manufacturer.Id;
       return item;
-    })
-    return products;
+    });
+     return products;
   }
 
   @Query('product')
@@ -42,24 +41,24 @@ export class ProductResolver {
 
   @Mutation()
    async deleteProduct(obj, args){
-     const product=this.product.findById(args.id)
+     const product = this.product.findById(args.id);
      await this.product.destroy({
       where: {id: args.id},
     });
-    console.log('what is product',product)
-    return product
+     console.log('what is product', product);
+     return product;
   }
 
   @Mutation()
   async createProduct(obj, {input}){
     const product = await this.product.create(input)
-    .catch((err)=>console.log('did it catch error',err.message));
+    .catch((err) => console.log('did it catch error', err.message));
     return product;
  }
 
  @Mutation()
  async updateProduct(obj, {input}){
-  const p =  await this.product.upsert(input, {returning:true});
+  const p =  await this.product.upsert(input, {returning: true});
   return p[0];
 }
 }

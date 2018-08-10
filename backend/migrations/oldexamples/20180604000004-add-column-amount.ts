@@ -6,14 +6,20 @@ import {
 export = {
     up: (queryInterface: QueryInterface, Sequelize: SequelizeStatic) => {
         return queryInterface.addColumn(
-            'Products',
-            'name',
-            Sequelize.STRING);
+            'Order_items',
+            'amount',
+            {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                onDelete: 'cascade',
+                defaultValue: 0,
+
+            });
         },
     down: (queryInterface: QueryInterface, Sequelize: SequelizeStatic) => {
         return queryInterface.removeColumn(
-            'Products',
-            'name',
+            'Order_items',
+            'amount',
         );
     },
 };
