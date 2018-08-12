@@ -11,7 +11,7 @@ import { ApolloProvider} from 'react-apollo';
 import {client} from './client';
 import {AUTH_TOKEN} from './constants';
 import {Redirect} from 'react-router';
-import Administration from './components/administration/orders';
+import Administration from './components/administration/table';
 
 interface IProps{
   history:any

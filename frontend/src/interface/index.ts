@@ -1,3 +1,5 @@
+
+
 export interface IRow {
         name?: string;
         type?:string;
@@ -10,5 +12,15 @@ export interface IRow {
         manufacturer_id?:number|string,
         id?:number|null, 
         pic: {  props: { src: String }}
-    
     }
+
+export interface IOrderItem{
+    id?: number,
+    status?: string,
+    amount?: number,
+    product_id?: number,
+    quantity?: number,
+    size?: string,
+    order_id?: number,
+    __typename?:any
+}

@@ -22,6 +22,7 @@ export class ProductResolver {
       ],
     });
      const products = product.map((item) => {
+       console.log('what is item',item)
       item.manufacturerName = item.get('Manufacturer').get('name');
       item.ManufacturerId = item.Manufacturer.Id;
       return item;
@@ -31,14 +32,16 @@ export class ProductResolver {
 
   @Query('product')
   async getProduct(obj, args, context, info) {
-    return await this.product.findById(args.id, {
+    const product:any= await this.product.findById(args.id, {
       include: [
         {model: this.manufacturer, as: 'Manufacturer'},
         {model: this.orderItem, as: 'OrderItem'},
       ],
     });
-  }
 
+    product.manufacturerName=product.Manufacturer.name
+    return product
+  }
   @Mutation()
    async deleteProduct(obj, args){
      const product = this.product.findById(args.id);
@@ -48,14 +51,12 @@ export class ProductResolver {
      console.log('what is product', product);
      return product;
   }
-
   @Mutation()
   async createProduct(obj, {input}){
     const product = await this.product.create(input)
     .catch((err) => console.log('did it catch error', err.message));
     return product;
  }
-
  @Mutation()
  async updateProduct(obj, {input}){
   const p =  await this.product.upsert(input, {returning: true});

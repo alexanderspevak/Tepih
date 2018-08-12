@@ -213,7 +213,7 @@ class Products extends React.Component<IProps, IState> {
                                 return (
                                     <Mutation 
                                         mutation={DELETE_PRODUCT}
-                                        update={(cache,{data}) => {
+                                        update={(cache,{data}:any) => {
                                              const productData=cache.readQuery({query:GET_PRODUCTS})as ProductData
                                             if(productData){
                                                 const resultData=productData.products.filter((item:any)=>item.id!=data.deleteProduct.id)
@@ -224,7 +224,7 @@ class Products extends React.Component<IProps, IState> {
                                     >
                                         {
                                             (deleteProduct,{data})=>(
-                                                <Button onClick={()=>{deleteProduct({variables:{value:row.id}})}}>
+                                                <Button onClick={()=>{deleteProduct({variables:{value:row.id as any}})}}>
                                                      delete
                                                 </Button>
                                             )

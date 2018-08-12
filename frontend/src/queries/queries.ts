@@ -23,7 +23,6 @@ export async function products():Promise<{}> {
       }
     }
     `
-
   export const GET_PRODUCTS =gql`
     {
       products{
@@ -48,10 +47,6 @@ export async function products():Promise<{}> {
     }
 
 `
-
-
-
-
 export const GET_LOCAL_MANUFACTURERS =gql`
 {
   manufacturers @client{
@@ -60,16 +55,11 @@ export const GET_LOCAL_MANUFACTURERS =gql`
 }
 `;
 
-
-
 export const UPDATE_PRODUCTTABLE=gql`
 mutation UpdateProductTable($values:[String!]){
   updateProductTable(value:$values)  @client
   }
 `;
-
-
-
 
 export const GET_MANUFACTURERS=gql`
 {
@@ -113,7 +103,6 @@ mutation updateProduct($input:UpdateCreateProduct!){
   }
 }
 `
-
 export const GET_LOCAL_ORDER_ITEMS=gql`
   query{
     orderItems @client{
@@ -121,7 +110,6 @@ export const GET_LOCAL_ORDER_ITEMS=gql`
     }
   }
     `
-
 export const UPDATE_LOCAL_ORDER_ITEMS=gql`
   mutation updateOrderItems($input:String){
     updateOrderItems(input:$input) @client
@@ -172,6 +160,7 @@ export const CUSTOMER_ORDER_ORDER_ITEM=gql`query{
       message
       id
       OrderItem{
+        order_id
         id
         quantity
         size
@@ -181,4 +170,14 @@ export const CUSTOMER_ORDER_ORDER_ITEM=gql`query{
       }
     }
   }
+}`
+
+export const GET_PRODUCT=gql`query Product($id:Int!){
+  product(id:$id){
+    name
+    manufacturerName
+  }
+}`
+export const UPDATE_ORDER_ITEM=gql`mutation UpdateOrderItem($input:updateCreateOrderItem){
+  updateOrderItem(input:$input)
 }`
